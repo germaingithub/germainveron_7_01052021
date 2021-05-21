@@ -1,6 +1,6 @@
-const models = require('../models');
-const asyncLib = require('async');
-const jwtUtils = require('../utils/auth')
+const models = require("../models");
+const asyncLib = require("async");
+const jwtUtils = require("../utils/auth");
 
 //constants
 const TITLE_LIMIT = 2;
@@ -8,7 +8,7 @@ const CONTENT_LIMIT = 4;
 const ITEMS_LIMIT = 50;
 //routes
 module.exports = {
-  createMessage: function(req, res) {
+  createMessage: function (req, res) {
     //getting auth header
     var headerAuth = req.headers["authorization"];
     var userId = jwtUtils.getUserId(headerAuth);
@@ -18,7 +18,7 @@ module.exports = {
     const content = req.body.content;
 
     if (title == null || content == null) {
-      return res.status(400).json({ error: "bad request" });
+      return res.status(400).json({ error: "bad reqeuest" });
     }
 
     if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
@@ -27,25 +27,25 @@ module.exports = {
 
     asyncLib.waterfall(
       [
-        function(done) {
+        function (done) {
           models.User.findOne({
             where: { id: userId },
           })
-            .then(function(userFound) {
+            .then(function (userFound) {
               done(null, userFound);
             })
-            .catch(function(err) {
+            .catch(function (err) {
               return res.status(500).json({ error: "unable to verify user" });
             });
         },
-        function(userFound, done) {
+        function (userFound, done) {
           if (userFound) {
             models.Message.create({
               title: title,
               content: content,
               likes: 0,
               UserId: userFound.id,
-            }).then(function(newMessage) {
+            }).then(function (newMessage) {
               done(newMessage);
             });
           } else {
@@ -53,7 +53,7 @@ module.exports = {
           }
         },
       ],
-      function(newMessage) {
+      function (newMessage) {
         if (newMessage) {
           return res.status(201).json(newMessage);
         } else {
@@ -62,7 +62,7 @@ module.exports = {
       }
     );
   },
-  listMessages: function(req, res) {
+  listMessages: function (req, res) {
     var fields = req.query.fields;
     var limit = parseInt(req.query.limit);
     var offset = parseInt(req.query.offset);
@@ -84,14 +84,14 @@ module.exports = {
         },
       ],
     })
-      .then(function(messages) {
+      .then(function (messages) {
         if (messages) {
           res.status(200).json(messages);
         } else {
           res.status(404).json({ error: "no mesccsages found" });
         }
       })
-      .catch(function(err) {
+      .catch(function (err) {
         console.log(err);
         res.status(500).json({ error: "invalid fields" });
       });

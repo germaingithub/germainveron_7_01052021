@@ -1,6 +1,8 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  var User = sequelize.define('User', {
+  var User = sequelize.define(
+    "User",
+    {
       email: DataTypes.STRING,
       username: DataTypes.STRING,
       password: DataTypes.STRING,
@@ -9,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       classMethods: {
-        associate: function(models) {
+        associate: function (models) {
           // associations can be defined here
           models.User.hasMany(models.Message);
         },
