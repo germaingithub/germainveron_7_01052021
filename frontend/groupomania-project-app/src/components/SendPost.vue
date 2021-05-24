@@ -54,7 +54,7 @@ name: "SendPost",
     content: "",
     attachment:"",
     likes:0,
-    UserId:"roro75277"
+    userId:""
     
     }
   },
@@ -71,7 +71,9 @@ methods:{
       
     this.image = this.$refs.image.files[0];
 },  
+
 createPost() {
+    
    const formData = new FormData();
       if (this.imageUrl !== "") {
         formData.append("image", this.image);
@@ -86,8 +88,9 @@ createPost() {
         formData.append("userId",parseInt(localStorage.getItem('pseudo')));
         formData.append("likes", 0)
       }  
-       
+     
 axios.post('http://localhost:8081/api/messages/new', formData,
+
 {
 headers: {
 'Content-Type': 'application/json',
@@ -95,7 +98,7 @@ Authorization: 'Bearer ' + localStorage.getItem('token')
 }
 })
 .then((res) => {
-   
+   console.log(formData);
     this.$router.push('ListMessages');
     console.log(res);
     alert("Bravo! Votre post est bien crée");

@@ -81,7 +81,7 @@ module.exports = {
       function(newUser) {
         if (newUser) {
           return res.status(201).json({
-            userId: newUser.id,
+            'userId': newUser.id,
           });
         } else {
           return res.status(500).json({ error: "cannot add user" });
