@@ -78,23 +78,26 @@ createPost() {
       if (this.imageUrl !== "") {
          formData.append("title", this.title); 
          formData.append("content", this.content); 
-        formData.append("attachment", "");
+        formData.append("image", "");
         formData.append("likes", 0)
+      formData.append("userId",parseInt(localStorage.getItem('userId')));
      
         
       } else {
           formData.append("title", this.title);
          formData.append("content", this.content);
         formData.append("likes", 0)
+        formData.append("userId",parseInt(localStorage.getItem('userId')));
+        
       }  console.log(formData.values);
      const config ={
          headers: {
         'Content-Type': "multipart/form-data",
-        Authorization: 'Bearer ' + localStorage.getItem('userToken')
+        authorization: 'Bearer ' + localStorage.getItem('userToken')
         }
      };
 axios.post('http://localhost:8081/api/messages/new',
- formData,
+formData,
  config
  )
 

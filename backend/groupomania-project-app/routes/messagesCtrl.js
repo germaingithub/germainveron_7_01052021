@@ -8,21 +8,23 @@ const CONTENT_LIMIT = 4;
 const ITEMS_LIMIT = 50;
 //routes
 module.exports = {
-  createMessage: function (req, res,next) {
+  createMessage: function (req, res,) {
+     
     //getting auth header
-    var headerAuth = req.headers["Authorization"];
+    var headerAuth = req.headers["authorization"];
     var userId = jwtUtils.getUserId(headerAuth);
     
     //params
     const title = req.body.title;
     const content = req.body.content;
-console.log(req);
+  console.log(req.headers);
+  console.log(req.header("authorization"));
     if (title == null || content == null) {
       return res.status(400).json({ error: "bad request" });
     }
-console.log(req.body);
+
     if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
-      return res.status(400).json({ error: "invalid paameters" });
+      return res.status(400).json({ error: "invalid paramrewereters" });
     }
 
     asyncLib.waterfall(

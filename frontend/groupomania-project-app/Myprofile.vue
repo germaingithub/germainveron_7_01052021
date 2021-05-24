@@ -55,7 +55,7 @@ methods:{
 deleteUser() {
     const id = this.userId;
     axios.delete('http://localhost:3000/api/auth/' + id, {
-        headers: {Authorization: "Bearer " + this.token}
+        headers: {authorization: "Bearer " + this.token}
     })
     .then(res => {
         console.log(res);

@@ -14,7 +14,7 @@ class ApiClient {
 
     return {
       ...contentType,
-      Authorization: "Bearer " + localStorage.getItem("userToken"),
+      authorization: "Bearer " + localStorage.getItem("userToken"),
     };
   }
 
