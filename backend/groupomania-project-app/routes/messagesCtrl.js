@@ -8,21 +8,21 @@ const CONTENT_LIMIT = 4;
 const ITEMS_LIMIT = 50;
 //routes
 module.exports = {
-  createMessage: function (req, res) {
+  createMessage: function (req, res,next) {
     //getting auth header
-    var headerAuth = req.headers["authorization"];
+    var headerAuth = req.headers["Authorization"];
     var userId = jwtUtils.getUserId(headerAuth);
-
+    
     //params
     const title = req.body.title;
     const content = req.body.content;
-
+console.log(req);
     if (title == null || content == null) {
-      return res.status(400).json({ error: "bad reqeuest" });
+      return res.status(400).json({ error: "bad request" });
     }
-
+console.log(req.body);
     if (title.length <= TITLE_LIMIT || content.length <= CONTENT_LIMIT) {
-      return res.status(400).json({ error: "invalid parameters" });
+      return res.status(400).json({ error: "invalid paameters" });
     }
 
     asyncLib.waterfall(
@@ -35,7 +35,7 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verify user" });
+              return res.status(500).json({ error: "unable to veify user" });
             });
         },
         function (userFound, done) {
@@ -44,12 +44,14 @@ module.exports = {
               title: title,
               content: content,
               likes: 0,
-              UserId: userFound.id,
+              userId: userFound.id,
+              
             }).then(function (newMessage) {
+            console.log(userFound);
               done(newMessage);
             });
           } else {
-            res.status(404).json({ error: "user not found" });
+            res.status(404).json({ error: "user nt found" });
           }
         },
       ],
@@ -57,12 +59,12 @@ module.exports = {
         if (newMessage) {
           return res.status(201).json(newMessage);
         } else {
-          return res.status(500).json({ error: "cannot post message" });
+          return res.status(500).json({ error: "cannot post mesage" });
         }
       }
     );
   },
-  listMessages: function (req, res) {
+  listMessages: function (req, res,next) {
     var fields = req.query.fields;
     var limit = parseInt(req.query.limit);
     var offset = parseInt(req.query.offset);

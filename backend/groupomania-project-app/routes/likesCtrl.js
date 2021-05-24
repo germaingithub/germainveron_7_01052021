@@ -126,7 +126,7 @@ module.exports = {
   },
   dislikePost: function(req, res) {
     // Getting auth header
-    var headerAuth = req.headers["authorization"];
+    var headerAuth = req.headers["Authorization"];
     var userId = jwtUtils.getUserId(headerAuth);
 
     // Params

@@ -50,12 +50,12 @@ export default {
 name: "SendPost",
   data() {
     return {
+    userId:parseInt(localStorage.getItem('userId')),    
     title: "",
     content: "",
     attachment:"",
-    likes:0,
-    userId:""
-    
+    likes:0
+
     }
   },
  
@@ -76,30 +76,31 @@ createPost() {
     
    const formData = new FormData();
       if (this.imageUrl !== "") {
-        formData.append("image", this.image);
-        formData.append("content", this.content);
-        formData.append("title", this.title);
+         formData.append("title", this.title); 
+         formData.append("content", this.content); 
+        formData.append("attachment", "");
         formData.append("likes", 0)
-        formData.append("userId",parseInt(localStorage.getItem('pseudo')));
+     
         
       } else {
+          formData.append("title", this.title);
          formData.append("content", this.content);
-         formData.append("title", this.title);
-        formData.append("userId",parseInt(localStorage.getItem('pseudo')));
         formData.append("likes", 0)
-      }  
-     
-axios.post('http://localhost:8081/api/messages/new', formData,
+      }  console.log(formData.values);
+     const config ={
+         headers: {
+        'Content-Type': "multipart/form-data",
+        Authorization: 'Bearer ' + localStorage.getItem('userToken')
+        }
+     };
+axios.post('http://localhost:8081/api/messages/new',
+ formData,
+ config
+ )
 
-{
-headers: {
-'Content-Type': 'application/json',
-Authorization: 'Bearer ' + localStorage.getItem('token')
-}
-})
 .then((res) => {
-   console.log(formData);
-    this.$router.push('ListMessages');
+   
+    this.$router.push('/ListMessages');
     console.log(res);
     alert("Bravo! Votre post est bien crée");
 })

@@ -93,7 +93,7 @@ export default {
               this.errorMessage = 'Utilisateur introuvable'
             } else {
               localStorage.setItem('userToken', data.token)
-              localStorage.setItem('userData', JSON.stringify(data.username))
+              localStorage.setItem('userId', data.userId)
               router.push({ name: 'CreateMessage' })
             }
           })
