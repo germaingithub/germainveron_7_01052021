@@ -30,15 +30,12 @@ exports.router = (function() {
 
     //Messages routes
     apiRouter.route("/messages/new/").post(multer, messagesCtrl.createMessage);
-    apiRouter.route("/messages/").get(multer,messagesCtrl.listMessages);
-
+    apiRouter.route("/messages/").get(messagesCtrl.listMessages);
+    apiRouter.route("/messages/:id").put(multer, messagesCtrl.modifyPost);
+    apiRouter.route("/messages/:id").delete(multer, messagesCtrl.deletePost);
     //likes
-    apiRouter
-      .route("/messages/:messageId/vote/like")
-      .post(likesCtrl.likePost);
-    apiRouter
-      .route("/messages/:messageId/vote/dislike")
-      .post(likesCtrl.dislikePost);
+    apiRouter.route("/messages/:messageId/vote/like").post(likesCtrl.likePost);
+    apiRouter.route("/messages/:messageId/vote/dislike").post(likesCtrl.dislikePost);
 
     module.exports = apiRouter;
 })();

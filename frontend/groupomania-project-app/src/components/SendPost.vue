@@ -103,7 +103,7 @@ formData,
 
 .then((res) => {
    
-    this.$router.push('/ListMessages');
+    this.$router.push('/messages');
     console.log(res);
     alert("Bravo! Votre post est bien crée");
 })
