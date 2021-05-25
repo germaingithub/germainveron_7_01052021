@@ -18,7 +18,7 @@ module.exports = {
     const title = req.body.title;
     const content = req.body.content;
   console.log(req.headers);
-  console.log(req.header("authorization"));
+  
     if (title == null || content == null) {
       return res.status(400).json({ error: "bad request" });
     }
@@ -34,13 +34,15 @@ module.exports = {
             where: { id: userId },
           })
             .then(function (userFound) {
+              
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to veify user" });
+              return res.status(500).json({ error: "unable to verfy user" });
             });
         },
         function (userFound, done) {
+          
           if (userFound) {
             models.Message.create({
               title: title,
@@ -49,7 +51,7 @@ module.exports = {
               userId: userFound.id,
               
             }).then(function (newMessage) {
-            console.log(userFound);
+            
               done(newMessage);
             });
           } else {

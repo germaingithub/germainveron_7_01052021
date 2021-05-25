@@ -7,14 +7,18 @@ module.exports = (sequelize, DataTypes) => {
       content: DataTypes.STRING,
       attachment: DataTypes.STRING,
       likes: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.STRING,
+        defaultValue: "gren",
+      },
     },
     {
       classMethods: {
         associate: function (models) {
           models.Message.belongsTo(models.User, {
-            foreignKey: {
-              allowNull: false,
-            },
+            foreignKey: "userId",
+            defaultValue: "userId",
+            allowNull: false,
           });
         },
       },

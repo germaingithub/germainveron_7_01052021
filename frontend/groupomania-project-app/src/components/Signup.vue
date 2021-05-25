@@ -105,7 +105,7 @@ export default {
            this.data = data.data;
            alert("Merci ! Votre compte est bien crée");
               location.href = "http://localhost:8081/?#/users/login/";
-              localStorage.setItem('pseudo', this.input.username)
+              localStorage.setItem('username', this.input.username)
           })
           
           .catch(error => {

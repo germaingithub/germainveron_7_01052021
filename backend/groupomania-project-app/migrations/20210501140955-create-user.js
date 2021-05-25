@@ -6,7 +6,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       email: {
         allowNull: false,
@@ -40,5 +40,5 @@ module.exports = {
   },
   down: (queryInterface, Sequelize) => {
     return queryInterface.dropTable("Users");
-  },
+  }
 };

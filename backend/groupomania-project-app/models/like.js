@@ -1,22 +1,27 @@
 
 module.exports = (sequelize, DataTypes) => {
-  const Like = sequelize.define('Like', {
-    messageId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'Message',
-        key: 'id'
-      }
+  const Like = sequelize.define(
+    "Like",
+    {
+      messageId: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: "Message",
+          key: "id",
+        },
+      },
+      userId: {
+        type: DataTypes.INTEGER,
+        defaultValue: "1",
+        references: {
+          model: "User",
+          key: "id",
+        },
+      },
+      isLike: DataTypes.INTEGER,
     },
-    userId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'User',
-        key: 'id'
-      }
-    },
-    isLike: DataTypes.INTEGER 
-  }, {});
+    {}
+  );
   Like.associate = function (models) {
     models.User.belongsToMany(models.Message, {
       through: models.Like,
