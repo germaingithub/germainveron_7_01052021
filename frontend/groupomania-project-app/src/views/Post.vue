@@ -28,7 +28,7 @@
                         <button type="submit" @click.prevent="" class="btn btn-fposts btn-sm bg-danger text-dark font-weight-bold mr-0 ">Modifier</button>
                         </div>
                         <div>
-                        <button type="submit" @click.prevent="" class="btn btn-fposts btn-sm bg-danger text-dark font-weight-bold">Supprimer</button>                   
+                        <button type="submit" @click.prevent="deletePost(post.id)" class="btn btn-fposts btn-sm bg-danger text-dark font-weight-bold mr-0 " id="delpost" :v-if="userId == post.userId == 1">Supprimer</button>                   
                     </div>
                     </div>
                     </div>
@@ -47,21 +47,45 @@ export default {
 name: "posts",
 data() {
     return {
-    token: localStorage.getItem("token"),
+    token: localStorage.getItem("userToken"),
     posts: [],
-    pseudo: localStorage.getItem("pseudo"),
+    userId: localStorage.getItem("userId"),
+    post: {
+    userId: localStorage.getItem("userId"),
+    id:"",
+    content: "",
+   
+  
+    },
 };
 },
 mounted() {
 axios
 .get('http://localhost:8081/api/messages/', {
        headers: {
-                'authorization': 'bearer ' + localStorage.getItem('token')
+                'authorization': 'bearer ' + localStorage.getItem('userToken')
             }})
     .then((response) => {
         this.posts = response.data;
         console.log(response);
     })
+},
+    
+    deletePost(id) {
+        console.log(id);
+    
+    axios.delete('http://localhost:8081/api/messages/' + id, {
+    headers: {
+        'authorization': 'bearer ' + localStorage.getItem('userToken')
+            }})
+    .then(response => {
+      alert("Votre post a été supprimé !")
+        console.log(response);
+        this.$router.go()
+    })
+    .catch(error => {
+      window.alert(error);
+ })
 }
 }
 </script>

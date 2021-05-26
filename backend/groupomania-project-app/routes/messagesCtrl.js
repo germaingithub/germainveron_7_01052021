@@ -1,6 +1,10 @@
 const models = require("../models");
 const asyncLib = require("async");
 const jwtUtils = require("../utils/auth");
+const db = require('../models/index');
+const Post = db.post;
+const User = db.user;
+const fs = require("fs");
 
 //constants
 const TITLE_LIMIT = 2;
@@ -8,17 +12,16 @@ const CONTENT_LIMIT = 4;
 const ITEMS_LIMIT = 50;
 //routes
 module.exports = {
-  createMessage: function (req, res,) {
-     
+  createMessage: function (req, res) {
     //getting auth header
     var headerAuth = req.headers["authorization"];
     var userId = jwtUtils.getUserId(headerAuth);
-    
+
     //params
     const title = req.body.title;
     const content = req.body.content;
-  console.log(req.headers);
-  
+    console.log(req.headers);
+
     if (title == null || content == null) {
       return res.status(400).json({ error: "bad request" });
     }
@@ -34,7 +37,6 @@ module.exports = {
             where: { id: userId },
           })
             .then(function (userFound) {
-              
               done(null, userFound);
             })
             .catch(function (err) {
@@ -42,16 +44,13 @@ module.exports = {
             });
         },
         function (userFound, done) {
-          
           if (userFound) {
             models.Message.create({
               title: title,
               content: content,
               likes: 0,
               userId: userFound.id,
-              
             }).then(function (newMessage) {
-            
               done(newMessage);
             });
           } else {
@@ -68,7 +67,7 @@ module.exports = {
       }
     );
   },
-  listMessages: function (req, res,next) {
+  listMessages: function (req, res, next) {
     var fields = req.query.fields;
     var limit = parseInt(req.query.limit);
     var offset = parseInt(req.query.offset);
@@ -102,57 +101,54 @@ module.exports = {
         res.status(500).json({ error: "invalid fields" });
       });
   },
-  
+
   modifyPost: function (req, res, next) {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Votre message modifié ne peut pas être vide",
-    });
-  }
+    if (!req.body) {
+      return res.status(400).send({
+        message: "Votre message modifié ne peut pas être vide",
+      });
+    }
 
-  const id = req.params.id;
+    const id = req.params.id;
 
-  Post.modifyPost(id, req.body)
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({
-          message: `Impossible de modifier le post avec id=${id}`,
-        });
-      } else res.send({ message: "Post modifié avec succes ! " });
-    })
-    .catch((err) => {
-      res
-        .status(500)
-        .send({
+    Post.modifyPost(id, req.body)
+      .then((data) => {
+        if (!data) {
+          res.status(404).send({
+            message: `Impossible de modifier le post avec id=${id}`,
+          });
+        } else res.send({ message: "Post modifié avec succes ! " });
+      })
+      .catch((err) => {
+        res.status(500).send({
           message: "Erreur avec la modification ud post avec l'id" + id,
         });
-    });
-},
+      });
+  },
 
-deletePost: (req, res, next) => {
-  Post.findOne({
-    where: {
-      id: req.params.id,
-    },
-  })
-    .then((post) => {
-      if (post.imageUrl !== null) {
-        const filename = post.imageUrl.split("/images/")[1];
-        fs.unlink(`images/${filename}`, () => {
-          Post.destroy({ where: { id: req.params.id } })
-            .then(() => res.status(200).json({ message: "Post supprimé !" }))
-            .catch((error) => res.status(400).json({ error }));
-        });
-      }
-      Post.destroy({ where: { id: req.params.id } })
-        .then(() => res.status(200).json({ message: "Post supprimé !" }))
-        .catch((error) => res.status(400).json({ error }));
+  deletePost: (req, res, next) => {console.log(req.params.id);
+    Post.findOne({
+      where: {
+        id: req.params.id,
+      },
     })
-    .catch((error) =>
-      res.status(400).json({ message: "Post iouvable", error: error })
-    );
-}
-  
+      .then((post) => {
+        if (post.imageUrl !== null) {
+          const filename = post.imageUrl.split("/images/")[1];
+          fs.unlink(`images/${filename}`, () => {
+            Post.destroy({ where: { id: req.params.id } })
+              .then(() => res.status(200).json({ message: "Post supprimé !" }))
+              .catch((error) => res.status(400).json({ error }));
+          });
+        }
+        Post.destroy({ where: { id: req.params.id } })
+          .then(() => res.status(200).json({ message: "Post supprimé !" }))
+          .catch((error) => res.status(400).json({ error }));
+      })
+      .catch((error) =>
+        res.status(400).json({ message: "Post iouvable", error: error })
+      );
+  },
 };
 
 
