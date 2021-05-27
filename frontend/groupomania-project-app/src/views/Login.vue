@@ -94,6 +94,7 @@ export default {
             } else {
               localStorage.setItem('userToken', data.token)
               localStorage.setItem('userId', data.userId)
+              localStorage.setItem('username',data.username)
               router.push({ name: 'CreateMessage' })
             }
           })

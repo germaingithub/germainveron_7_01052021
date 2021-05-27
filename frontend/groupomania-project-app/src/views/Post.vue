@@ -1,91 +1,71 @@
 <template>
-<div>
-<div class="col-lg-7 offset-lg-3 mx-auto my-5">
-    <h2>Tous les posts</h2>
-    <div class="row mx-auto my-5" v-for="post in posts" :key="post.id">
+    <div class="row mx-auto my-5">
         <div class="col-lg-8 mx-auto bg-dark ">
-          	<div class="card my-3 mx-auto p-1">
-                {{ post.title }} 
+            <div>
+                <img class="rounded-circle" width="50" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80">
             </div>
-			<div class="card my-3 mx-auto p-2">
-                {{ post.content }} 
+            <div class="text-white font-weight-bold">
+                {{ username + " " + "a écrit"}}
+            </div>
+            <div class="card my-3 mx-auto">
+                {{ title }} 
+                {{ content }} 
+                 {{ likes }}
+			<div class="card my-3 mx-auto">
                 
+                <div>
+            <img id="imgpost" :src="imageUrl">
+                </div>
             </div>
-            <div >
-             <svg  style="width:17px;height:17px" viewBox="0 0 24 24">
-          <path 
-            fill="#ff0000"
-            d="M23,10C23,8.89 22.1,8 21,8H14.68L15.64,3.43C15.66,3.33 15.67,3.22 15.67,3.11C15.67,2.7 15.5,2.32 15.23,2.05L14.17,1L7.59,7.58C7.22,7.95 7,8.45 7,9V19A2,2 0 0,0 9,21H18C18.83,21 19.54,20.5 19.84,19.78L22.86,12.73C22.95,12.5 23,12.26 23,12V10M1,21H5V9H1V21Z"
-          />
-          
-          
-        </svg>
-             <span class="ml-2 fs-2 text-light">{{ post.likes}}</span>  
             </div>
-            
-            <div class="form-group mr-0 ">
-                <div class="my-2">
-                        <button type="submit" @click.prevent="" class="btn btn-fposts btn-sm bg-danger text-dark font-weight-bold mr-0 ">Modifier</button>
-                        </div>
-                        <div>
-                        <button type="submit" @click.prevent="deletePost(post.id)" class="btn btn-fposts btn-sm bg-danger text-dark font-weight-bold mr-0 " id="delpost" :v-if="userId == post.userId == 1">Supprimer</button>                   
-                    </div>
-                    </div>
-                    </div>
-	</div>
-</div>
+        <slot name="Comments"></slot>
+        <slot name="EditCom"></slot>
+         
+  </div>      
 </div>
 </template>
 
 <script>
-import axios from "axios";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
-
-library.add(faUserSecret)
 export default {
-name: "posts",
+name: "Post",
 data() {
     return {
-    token: localStorage.getItem("userToken"),
-    posts: [],
-    userId: localStorage.getItem("userId"),
-    post: {
-    userId: localStorage.getItem("userId"),
-    id:"",
-    content: "",
-   
-  
+    }
+},
+    props: {
+        
+        username: {
+            type: String,
+            default: ""
+        },
+        title: {
+            type: String,
+            default: ""
+        },
+        content: {
+            type: String,
+            default: ""
+        },   
+        likes: {
+            type: String,
+            default: ""
+        },   
+        postId: {
+            type: String
+        },
+        imageUrl: {
+            type: String
+        },
+        commentContent: {
+            type: String
+        }
     },
-};
-},
-mounted() {
-axios
-.get('http://localhost:8081/api/messages/', {
-       headers: {
-                'authorization': 'bearer ' + localStorage.getItem('userToken')
-            }})
-    .then((response) => {
-        this.posts = response.data;
-        console.log(response);
-    })
-},
-    
-    deletePost(id) {
-        console.log(id);
-    
-    axios.delete('http://localhost:8081/api/messages/' + id, {
-    headers: {
-        'authorization': 'bearer ' + localStorage.getItem('userToken')
-            }})
-    .then(response => {
-      alert("Votre post a été supprimé !")
-        console.log(response);
-        this.$router.go()
-    })
-    .catch(error => {
-      window.alert(error);
- })
-}
 }
 </script>
+
+<style scoped>
+#imgpost {
+ max-width: 200px;
+ max-height: 200px;
+}
+</style>

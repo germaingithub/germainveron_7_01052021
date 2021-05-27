@@ -49,6 +49,7 @@ module.exports = {
               title: title,
               content: content,
               likes: 0,
+              
               userId: userFound.id,
             }).then(function (newMessage) {
               done(newMessage);
@@ -126,22 +127,23 @@ module.exports = {
       });
   },
 
-  deletePost: (req, res, next) => {console.log(req.params.id);
-    Post.findOne({
+  deletePost: (req, res, next) => {
+    models.Message.findOne({
       where: {
         id: req.params.id,
       },
     })
-      .then((post) => {
-        if (post.imageUrl !== null) {
-          const filename = post.imageUrl.split("/images/")[1];
+      .then((post) => {console.log(post);
+        if (post.attachment !== null) {
+          const filename = post.attachment.split("/images/")[1];
           fs.unlink(`images/${filename}`, () => {
-            Post.destroy({ where: { id: req.params.id } })
+            models
+              .Message.destroy({ where: { id: req.params.id } })
               .then(() => res.status(200).json({ message: "Post supprimé !" }))
               .catch((error) => res.status(400).json({ error }));
           });
         }
-        Post.destroy({ where: { id: req.params.id } })
+        models.Message.destroy({ where: { id: req.params.id } })
           .then(() => res.status(200).json({ message: "Post supprimé !" }))
           .catch((error) => res.status(400).json({ error }));
       })

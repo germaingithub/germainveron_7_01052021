@@ -19,7 +19,15 @@
 <script>
 export default {
     name: 'NavbarPost',
+    methods: {
+    logout () {
+    localStorage.removeItem('userToken')
+    localStorage.removeItem('username')
+    localStorage.removeItem('userId')
+    this.$router.push('/')
+    }
     
+}
 }
 
 </script>

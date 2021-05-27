@@ -6,7 +6,7 @@ const likesCtrl = require('./groupomania-project-app/routes/likesCtrl');
 const bodyParser = require("body-parser");
 const app = express();
 const cors = require('cors');
-const auth = require('./groupomania-project-app/utils/auth')
+const auth = require('./groupomania-project-app/utils/authi')
 const multer = require('./groupomania-project-app/utils/multer-config')
 
 app.use(cors({origin:true}));

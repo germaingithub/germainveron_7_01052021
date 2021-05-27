@@ -75,7 +75,7 @@ methods:{
 createPost() {
     
    const formData = new FormData();
-      if (this.imageUrl !== "") {
+      if (this.attachment !== "") {
          formData.append("title", this.title); 
          formData.append("content", this.content); 
         formData.append("image", "");
