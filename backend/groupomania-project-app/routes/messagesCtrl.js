@@ -5,6 +5,7 @@ const db = require('../models/index');
 const Post = db.post;
 const User = db.user;
 const fs = require("fs");
+//const xss = require("xss");
 
 //constants
 const TITLE_LIMIT = 2;
@@ -20,7 +21,7 @@ module.exports = {
     //params
     const title = req.body.title;
     const content = req.body.content;
-    console.log(req.headers);
+    
 
     if (title == null || content == null) {
       return res.status(400).json({ error: "bad request" });
@@ -32,7 +33,7 @@ module.exports = {
 
     asyncLib.waterfall(
       [
-        function (done) {
+        function (done) {console.log("tt");
           models.User.findOne({
             where: { id: userId },
           })
@@ -44,12 +45,14 @@ module.exports = {
             });
         },
         function (userFound, done) {
+          
           if (userFound) {
             models.Message.create({
               title: title,
               content: content,
               likes: 0,
-              
+              //attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+                
               userId: userFound.id,
             }).then(function (newMessage) {
               done(newMessage);
@@ -133,7 +136,7 @@ module.exports = {
         id: req.params.id,
       },
     })
-      .then((post) => {console.log(post);
+      .then((post) => {
         if (post.attachment !== null) {
           const filename = post.attachment.split("/images/")[1];
           fs.unlink(`images/${filename}`, () => {

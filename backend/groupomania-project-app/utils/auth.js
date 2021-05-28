@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const JWT_SIGN_SECRET =
-  '$2y$10$7G2APt9ivpP3oUKZDWjwzO7SIp9ccXaI4Q5c8WZmwCMgRCy1IQ3k.';
+  "$2y$10$7G2APt9ivpP3oUKZDWjwzO7SIp9ccXaI4Q5c8WZmwCMgRCy1IQ3k.";
 module.exports = {
-  generateTokenForUser: function(userData) {
+  generateTokenForUser: function (userData) {
     return jwt.sign(
       {
         userId: userData.id,
@@ -15,10 +15,10 @@ module.exports = {
       }
     );
   },
-  parseAuthorization: function(authorization) {
+  parseAuthorization: function (authorization) {
     return authorization != null ? authorization.replace("Bearer ", "") : null;
   },
-  getUserId: function(authorization) {
+  getUserId: function (authorization) {
     var userId = -1;
     var token = module.exports.parseAuthorization(authorization);
     if (token != null) {

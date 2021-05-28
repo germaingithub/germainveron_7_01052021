@@ -82,7 +82,7 @@ created() {
 axios
 .get('http://localhost:8081/api/messages/', {
     headers: {
-        'authorization': 'bearer ' + localStorage.getItem('userToken')
+        'authorization': 'Bearer ' + localStorage.getItem('userToken')
             }})
     .then((response) => {
         
