@@ -136,10 +136,10 @@ module.exports = {
         id: req.params.id,
       },
     })
-      .then((post) => {
+      .then((post) => { 
         if (post.attachment !== null) {
           const filename = post.attachment.split("/images/")[1];
-          fs.unlink(`images/${filename}`, () => {
+          fs.unlink(`public/images/${filename}`, () => {
             models
               .Message.destroy({ where: { id: req.params.id } })
               .then(() => res.status(200).json({ message: "Post supprimé !" }))

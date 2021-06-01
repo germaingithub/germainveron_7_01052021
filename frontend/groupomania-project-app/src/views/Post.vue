@@ -66,11 +66,7 @@ data() {
             type: String
         }
     },
-    methods: {
-    getImgUrl(image) { console.log(image);
-    return require('@ '+image)
-    }
-}
+    
 }
 </script>
 

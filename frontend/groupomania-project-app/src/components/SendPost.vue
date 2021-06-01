@@ -82,7 +82,7 @@
             createPost() {
 
                 const formData = new FormData();
-                if (this.image !== "") { 
+                if (this.image !== null) { 
                     formData.append("title", this.title);
                     formData.append("content", this.content);
                     formData.append("attachment", this.image);
@@ -95,6 +95,7 @@
                     formData.append("content", this.content);
                     formData.append("likes", 0)
                     formData.append("userId", parseInt(localStorage.getItem('userId')));
+                    
                     console.log('lautre');
                 }
                 console.log(formData.values);
