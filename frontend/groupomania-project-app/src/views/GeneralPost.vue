@@ -9,7 +9,8 @@
     :content ="post.content"
     :likes ="post.likes"
     :attachment ="post.attachment"
-    :key="post.id" >
+    :key="post.id" 
+    > 
   <template v-slot:Comments v-if="post.Comments !== null">
     <div class="last-comments">
                 <div class="comment-bloc"
@@ -20,13 +21,14 @@
                   <p>{{ comment.content }}</p>
                 </div>
               </div>
-     </div>
+     </div> 
   </template>
   <template v-slot:EditCom>
     <div>
       <form>
        
       <div>
+        
         <button @click.prevent="sendCom(post.id)" id="sendcom" type="submit" aria-label="Publication d'un commentaire">Commenter</button>
         <button type="submit" @click.prevent="deletePost(post.id)" id="delpost" v-if="userId == post.userId || isAdmin == 1">Supprimer le post</button>
         </div>
@@ -59,22 +61,22 @@ data() {
       userId:localStorage.getItem('userId'),
       title:"", 
       content: "",
-      attachment:"image",
+      attachment:"",
       likes:"",
     },
-    //id:"",
-    //user: {
-     // username:"",
-     // id:""
-    //},
-//    comment: {
-//        content: "",
-  //      userId: "",
-    //    id:""
-      //},
-//contentComment: {
-//                content: ''
-//            },
+    id:"",
+    user: {
+      username:"",
+      id:""
+    },
+    comments: {
+        content: "",
+        userId: "",
+        id:""
+      },
+contentComment: {
+                content: ''
+            },
 }
 },
 created() {
@@ -92,10 +94,10 @@ axios
 },
 methods: {
     postImage() {
-        console.log(this.post.imageUrl);
-        return `images/${this.imageUrl}`
         
-    },
+        return `backend/images/${this.post.attachment}`
+        
+    }, 
     sendCom(id) {
         const comment = {
         content: this.comment.content,
@@ -103,23 +105,23 @@ methods: {
         postId: id
     };
     console.log(id);
-//axios.post('http://localhost:3000/api/auth/' + id + '/comment', comment,
-//{
-//headers: {
-//authorization: 'Bearer ' + localStorage.getItem('userToken')
-//}
-//})
-//.then((res) => {
-//    console.log(res);
-//    console.log(res);
-//    alert("Commentaire posté");
-//})
-//.catch(e => {
-//        console.log(e + "Impossible d'éditer le post, une erreur est survenue");
-//})
-//},
-//setComment(event){
-//this.commentContent = event.target.value
+axios.post('http://localhost:3000/api/auth/' + id + '/comment', comment,
+{
+headers: {
+authorization: 'Bearer ' + localStorage.getItem('userToken')
+}
+})
+.then((res) => {
+    console.log(res);
+   
+    alert("Commentaire posté");
+})
+.catch(e => {
+        console.log(e + "Impossible d'éditer le post, une erreur est survenue");
+})
+},
+setComment(event){
+this.commentContent = event.target.value
 },
 deletePost(id) {console.log(id);
     

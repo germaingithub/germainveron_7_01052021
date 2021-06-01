@@ -44,15 +44,15 @@ module.exports = {
               return res.status(500).json({ error: "unable to verfy user" });
             });
         },
-        function (userFound, done) {
+        function (userFound, done) {console.log("tt22e");
           
           if (userFound) {
-            models.Message.create({
+            models.Message.create({ 
               title: title,
               content: content,
               likes: 0,
-              //attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-                
+              attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+               
               userId: userFound.id,
             }).then(function (newMessage) {
               done(newMessage);
@@ -153,6 +153,30 @@ module.exports = {
       .catch((error) =>
         res.status(400).json({ message: "Post iouvable", error: error })
       );
+  },
+  createComment: (req, res, next) => {
+  const comment = {
+    content: req.body.content,
+    userId: req.body.userId,
+    Message_id: req.params.id,
+  };
+  console.log(req.body);
+  //Enregistre le post dans la base de données
+  Comment.create(comment)
+    .then(() => res.status(201).json({ message: "Commentaire enregistré !" }))
+    .catch(() =>
+      res.status(400).json({ message: "erreur commentaire controller" })
+    );
+  },
+
+  getAllComments: (req, res, next) => {
+  Comment.findAll({
+    where: {
+      Message_id: req.params.id,
+    },
+  })
+    .then((comment) => res.status(200).json(comment))
+    .catch((error) => res.status(400).json({ error: "Erreur  commentaire" }));
   },
 };
 

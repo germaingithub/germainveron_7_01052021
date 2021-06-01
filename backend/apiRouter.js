@@ -9,10 +9,10 @@ const cors = require('cors');
 const auth = require('./groupomania-project-app/utils/authi')
 const multer = require('./groupomania-project-app/utils/multer-config')
 const path = require("path");
-//const helmet = require("helmet");
+const helmet = require("helmet");
 
 
-//app.use(helmet());
+app.use(helmet());
 
 app.use(cors({origin:true}));
 app.use(bodyParser.json());
@@ -23,6 +23,7 @@ app.use(
 );
 app.use(express.json());
 app.use("/images", express.static(path.join(__dirname, "images")));
+
 //Router
 exports.router = (function() {
   const apiRouter = express.Router();
@@ -35,13 +36,17 @@ exports.router = (function() {
 
     //Messages routes
     apiRouter.route("/messages/new/").post(multer, messagesCtrl.createMessage);
-    apiRouter.route("/messages/").get( messagesCtrl.listMessages);
-    apiRouter.route("/messages/:id").put( messagesCtrl.modifyPost);
-    apiRouter.route("/messages/:id").delete( messagesCtrl.deletePost);
+    apiRouter.route("/messages/").get(multer, messagesCtrl.listMessages);
+    apiRouter.route("/messages/:id").put(multer, messagesCtrl.modifyPost);
+    apiRouter.route("/messages/:id").delete(multer, messagesCtrl.deletePost);
    
     //likes
     apiRouter.route("/messages/:messageId/vote/like").post(likesCtrl.likePost);
     apiRouter.route("/messages/:messageId/vote/dislike").post(likesCtrl.dislikePost);
+
+    //comments
+    apiRouter.route("/:id/comment").post(messagesCtrl.createComment);
+    apiRouter.route("/:id/comment").get(messagesCtrl.getAllComments);
 
     module.exports = apiRouter;
 })();

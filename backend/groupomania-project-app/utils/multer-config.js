@@ -5,7 +5,7 @@ const MIME_TYPES = {
   "image/jpeg": "jpg",
   "image/png": "png",
 };
-console.log(multer);
+
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     callback(null, "images");
@@ -16,5 +16,5 @@ const storage = multer.diskStorage({
     callback(null, name + Date.now() + "." + extension);
   },
 });
-console.log(storage);
+
 module.exports = multer({ storage: storage }).single("attachment");

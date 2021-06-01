@@ -45,10 +45,22 @@ db.Sequelize = Sequelize;
 
 db.user = require("./user")(sequelize, Sequelize);
 db.post = require("./message")(sequelize, Sequelize);
+db.comments = require("./Comments")(sequelize, Sequelize);
 
 db.user.hasMany(db.post);
 db.post.belongsTo(db.user, {
   foreignKey: "userId",
+});
+
+db.user.hasMany(db.comments);
+
+db.comments.belongsTo(db.user, {
+  foreignKey: "userId",
+});
+db.post.hasMany(db.comments);
+
+db.comments.belongsTo(db.post, {
+  foreignKey: "Message_id",
 });
 
 module.exports = db;

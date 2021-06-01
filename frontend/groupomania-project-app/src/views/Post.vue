@@ -5,23 +5,28 @@
                 <img class="rounded-circle" width="50" src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80">
             </div>
             <div class="text-white font-weight-bold">
-                {{ username + " " + "a écrit"}}
+                {{ username + " " + ""}}
             </div>
             <div class="card my-3 mx-auto">
                 {{ title }} 
                 {{ content }} 
                  {{ likes }}
+                 {{attachment}}
 			<div class="card my-3 mx-auto">
                 
-                <div>
-            <img id="imgpost" :src="imageUrl">
-                </div>
+               
             </div>
+            
             </div>
         <slot name="Comments"></slot>
         <slot name="EditCom"></slot>
-         
-  </div>      
+            <div>
+            <img id="imgpost"  width="150" height="150" :src="attachment">
+                </div>
+        </div>
+        <div>
+           <img :src="attachment" alt=""> 
+        </div>
 </div>
 </template>
 
@@ -29,7 +34,8 @@
 export default {
 name: "Post",
 data() {
-    return {
+    return { 
+        post:null
     }
 },
     props: {
@@ -53,19 +59,24 @@ data() {
         postId: {
             type: String
         },
-        imageUrl: {
+        attachment: {
             type: String
         },
         commentContent: {
             type: String
         }
     },
+    methods: {
+    getImgUrl(attachment) {
+    return require('@/images '+attachment)
+    }
+}
 }
 </script>
 
 <style scoped>
 #imgpost {
- max-width: 200px;
- max-height: 200px;
+ max-width: 300px;
+ max-height: 300px;
 }
 </style>

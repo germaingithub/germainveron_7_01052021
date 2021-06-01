@@ -82,10 +82,10 @@
             createPost() {
 
                 const formData = new FormData();
-                if (this.attachment !== "") {
+                if (this.image !== "") { 
                     formData.append("title", this.title);
                     formData.append("content", this.content);
-                    formData.append("image", "");
+                    formData.append("attachment", this.image);
                     formData.append("likes", 0)
                     formData.append("userId", parseInt(localStorage.getItem('userId')));
                 console.log('dd');
