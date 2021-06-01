@@ -21,7 +21,7 @@ export default {
     name: 'NavbarPost',
     methods: {
     logout () {
-    localStorage.removeItem('userToken')
+    localStorage.removeItem('token')
     localStorage.removeItem('username')
     localStorage.removeItem('userId')
     this.$router.push('/')

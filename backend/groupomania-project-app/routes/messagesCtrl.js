@@ -62,7 +62,7 @@ module.exports = {
           }
         },
       ],
-      function (newMessage) {
+      function (newMessage) {console.log("tt3");
         if (newMessage) {
           return res.status(201).json(newMessage);
         } else {
@@ -84,7 +84,7 @@ module.exports = {
     models.Message.findAll({
       order: [order != null ? order.split(":") : ["title", "ASC"]],
       attributes: fields !== "*" && fields != null ? fields.split(",") : null,
-      limit: !isNaN(limit) ? limit : null,
+      limit: !isNaN(limit) ? limit : 5,
       offset: !isNaN(offset) ? offset : null,
       include: [
         {

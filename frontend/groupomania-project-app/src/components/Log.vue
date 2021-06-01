@@ -92,7 +92,7 @@ export default {
             if (!data.token) {
               this.errorMessage = 'Utilisateur introuvable'
             } else {
-              localStorage.setItem('userToken', data.token)
+              localStorage.setItem('token', data.token)
               localStorage.setItem('userData', JSON.stringify(data.username))
               router.push({ name: 'Login' })
               location.href = "http://localhost:8080/?#/messages/new";

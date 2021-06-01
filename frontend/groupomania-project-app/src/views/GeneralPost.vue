@@ -84,18 +84,18 @@ created() {
 axios
 .get('http://localhost:8081/api/messages/', {
     headers: {
-        'authorization': 'Bearer ' + localStorage.getItem('userToken')
+        'authorization': 'Bearer ' + localStorage.getItem('token')
             }})
     .then((response) => {
         
         this.posts = response.data;
-        console.log(response);
+        console.log(response.data);
     })
 },
 methods: {
     postImage() {
         
-        return `backend/images/${this.post.attachment}`
+        return `/images/${this.post.attachment}`
         
     }, 
     sendCom(id) {
@@ -108,7 +108,7 @@ methods: {
 axios.post('http://localhost:3000/api/auth/' + id + '/comment', comment,
 {
 headers: {
-authorization: 'Bearer ' + localStorage.getItem('userToken')
+authorization: 'Bearer ' + localStorage.getItem('token')
 }
 })
 .then((res) => {
@@ -128,7 +128,7 @@ deletePost(id) {console.log(id);
     axios.delete('http://localhost:8081/api/messages/' + id, {
     headers: {
       
-        'authorization': 'Bearer ' + localStorage.getItem('userToken')
+        'authorization': 'Bearer ' + localStorage.getItem('token')
             }})
     .then(response => {
       alert("Votre post a été supprimé !")

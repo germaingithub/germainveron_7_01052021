@@ -9,24 +9,24 @@
             </div>
             <div class="card my-3 mx-auto">
                 {{ title }} 
+                
                 {{ content }} 
                  {{ likes }}
-                 {{attachment}}
+ 
 			<div class="card my-3 mx-auto">
                 
-               
-            </div>
+              </div> 
+            
             
             </div>
+            <div>
+            <img id="imgpost" class="mb-3" :src="attachment">
+                </div>
         <slot name="Comments"></slot>
         <slot name="EditCom"></slot>
-            <div>
-            <img id="imgpost"  width="150" height="150" :src="attachment">
-                </div>
+            
         </div>
-        <div>
-           <img :src="attachment" alt=""> 
-        </div>
+       
 </div>
 </template>
 
@@ -67,8 +67,8 @@ data() {
         }
     },
     methods: {
-    getImgUrl(attachment) {
-    return require('@/images '+attachment)
+    getImgUrl(image) { console.log(image);
+    return require('@ '+image)
     }
 }
 }

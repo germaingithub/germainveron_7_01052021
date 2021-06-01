@@ -101,7 +101,7 @@
                 const config = {
                     headers: {
                         'Content-Type': "multipart/form-data",
-                        authorization: 'Bearer ' + localStorage.getItem('userToken')
+                        authorization: 'Bearer ' + localStorage.getItem('token')
                     }
                 };
                 axios.post('http://localhost:8081/api/messages/new',
