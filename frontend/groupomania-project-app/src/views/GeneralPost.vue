@@ -14,11 +14,11 @@
   <template v-slot:Comments v-if="post.Comments !== null">
     <div class="last-comments">
                 <div class="comment-bloc"
-                  v-for="comment in post.comments"
-                  v-bind:key="comment.id">
+                  v-for="comments in post.comments"
+                  v-bind:key="comments.id">
                   <div class="comment-area">
-                  <p class="user-name">{{ comment.User.username }}</p>
-                  <p>{{ comment.content }}</p>
+                  <p class="user-name">{{ comments.User.username }}</p>
+                  <p>{{ comments.content }}</p>
                 </div>
               </div>
      </div> 
@@ -26,7 +26,10 @@
   <template v-slot:EditCom>
     <div>
       <form>
-       
+       <div>
+          <textarea id="contentComment" class="form-control" v-model="contentComment.content" aria-label="commentaire" placeholder="Commenter"
+          ></textarea>
+       </div>
       <div>
         
         <button @click.prevent="sendCom(post.id)" id="sendcom" type="submit" aria-label="Publication d'un commentaire">Commenter</button>
@@ -72,7 +75,7 @@ data() {
     comments: {
         content: "",
         userId: "",
-        id:""
+        Message_id:""
       },
 contentComment: {
                 content: ''
@@ -101,11 +104,11 @@ methods: {
     sendCom(id) {
         const comment = {
         content: this.comment.content,
-        userId: parseInt(localStorage.getItem('userId')),
-        postId: id
+        user_Id: parseInt(localStorage.getItem('userId')),
+        Message_id: id
     };
     console.log(id);
-axios.post('http://localhost:3000/api/auth/' + id + '/comment', comment,
+axios.post('http://localhost:8081/api/messages/' + id + '/comments', comment,
 {
 headers: {
 authorization: 'Bearer ' + localStorage.getItem('token')

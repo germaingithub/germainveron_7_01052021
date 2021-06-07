@@ -8,17 +8,18 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      userId: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       Message_id: {
-        type: Sequelize.INTEGER,
         allowNull: false,
+        type: Sequelize.INTEGER,
+      },
+      userId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        defaultValue: "gren",
       },
       content: {
-        type: Sequelize.STRING,
         allowNull: false,
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

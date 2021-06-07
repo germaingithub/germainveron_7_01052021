@@ -142,7 +142,16 @@ module.exports = {
         }
       }
     );
+    
   },
+  findByPk: function (req, res){
+      User.findByPk(req.params.id).then((user) => {
+        res.status(200).json({
+          status: true,
+          data: user,
+        });
+      });
+    },
   getUserProfile: function(req, res) {
     // Getting auth header
     var headerAuth = req.headers["authorization"];

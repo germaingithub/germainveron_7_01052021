@@ -5,6 +5,7 @@ const db = require('../models/index');
 const Post = db.post;
 const User = db.user;
 const fs = require("fs");
+const Comment = db.comments;
 //const xss = require("xss");
 
 //constants
@@ -155,18 +156,19 @@ module.exports = {
       );
   },
   createComment: (req, res, next) => {
-  const comment = {
-    content: req.body.content,
+  const comment = { 
     userId: req.body.userId,
     Message_id: req.params.id,
+    content: req.body.content,
   };
-  console.log(req.body);
+  console.log(comment);
   //Enregistre le post dans la base de données
   Comment.create(comment)
     .then(() => res.status(201).json({ message: "Commentaire enregistré !" }))
-    .catch(() =>
-      res.status(400).json({ message: "erreur commentaire controller" })
-    );
+    .catch((err) =>
+    {console.log(err);  
+    res.status(400).json({ message: "erreur com' controller" })
+    });
   },
 
   getAllComments: (req, res, next) => {
