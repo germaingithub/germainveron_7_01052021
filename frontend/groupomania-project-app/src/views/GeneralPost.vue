@@ -9,16 +9,15 @@
     :content ="post.content"
     :likes ="post.likes"
     :attachment ="post.attachment"
-    :key="post.id" 
-    > 
+    :key="post.id" > 
   <template v-slot:Comments v-if="post.Comments !== null">
     <div class="last-comments">
                 <div class="comment-bloc"
-                  v-for="comments in post.comments"
-                  v-bind:key="comments.id">
+                  v-for="comment in post.comments"
+                  v-bind:key="comment.id">
                   <div class="comment-area">
-                  <p class="user-name">{{ comments.User.username }}</p>
-                  <p>{{ comments.content }}</p>
+                  <p class="user-name">{{ comment.User.username }}</p>
+                  <p>{{ comment.content }}</p>
                 </div>
               </div>
      </div> 
@@ -28,7 +27,7 @@
       <form>
        <div>
           <textarea id="contentComment" class="form-control" v-model="contentComment.content" aria-label="commentaire" placeholder="Commenter"
-          ></textarea>
+          ></textarea> 
        </div>
       <div>
         
@@ -45,7 +44,6 @@
 
 <script>
 import NavbarPost from '../components/NavPost'
-
 import Post from './Post.vue'
 import Footer from '../components/Footer'
 import axios from "axios";
@@ -66,13 +64,14 @@ data() {
       content: "",
       attachment:"",
       likes:"",
+      comments: [],
     },
     id:"",
     user: {
       username:"",
       id:""
     },
-    comments: {
+    comment: {
         userId: "",
         Message_id:"",
         content: "",
@@ -101,14 +100,14 @@ methods: {
         return `/images/${this.post.attachment}`
         
     }, 
-    sendCom(id) {
+    sendCom(id) { 
         const comment = {
-        content: this.comment.content,
-        user_Id: parseInt(localStorage.getItem('userId')),
+        content: this.contentComment.content,
+        userId: parseInt(localStorage.getItem('userId')),
         Message_id: id
     };
-    console.log(id);
-axios.post('http://localhost:8081/api/messages/' + id + '/comments', comment,
+    console.log(comment);
+axios.post('http://localhost:8081/api/' + id + '/comment', comment,
 {
 headers: {
 authorization: 'Bearer ' + localStorage.getItem('token')
