@@ -73,9 +73,9 @@ data() {
       id:""
     },
     comments: {
-        content: "",
         userId: "",
-        Message_id:""
+        Message_id:"",
+        content: "",
       },
 contentComment: {
                 content: ''
