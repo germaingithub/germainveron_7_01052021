@@ -136,6 +136,11 @@ module.exports = {
           return res.status(201).json({
             userId: userFound.id,
             token: jwtUtils.generateTokenForUser(userFound),
+            //token: jwt.sign(
+             // { userId: userFound._id },
+             // "7G2APt9ivpP3oUKZDWjwzO7SIp9ccXaI4Q5c8WZmwCMgRCy1IQ3k",
+             // { expiresIn: '24h' }
+           // ),
           });
         } else {
           return res.status(500).json({ error: "cannot log on user" });

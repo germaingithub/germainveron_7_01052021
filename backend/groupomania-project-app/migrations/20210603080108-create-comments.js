@@ -15,7 +15,7 @@ module.exports = {
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        defaultValue: "gren",
+        defaultValue: "grtten",
       },
       content: {
         allowNull: false,

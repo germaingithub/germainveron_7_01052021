@@ -14,7 +14,7 @@ module.exports = {
         expiresIn: "24h",
       }
     );
-  },
+  },//fds
   parseAuthorization: function (authorization) {
     return authorization != null ? authorization.replace("Bearer ", "") : null;
   },

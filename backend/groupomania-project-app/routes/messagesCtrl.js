@@ -34,7 +34,7 @@ module.exports = {
 
     asyncLib.waterfall(
       [
-        function (done) {console.log("tt");
+        function (done) {
           models.User.findOne({
             where: { id: userId },
           })
@@ -42,12 +42,12 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              return res.status(500).json({ error: "unable to verfy user" });
+              return res.status(500).json({ error: "unable to verify user" });
             });
         },
-        function (userFound, done) {console.log("tt22e");
+        function (userFound, done) {console.log("tt22");
           
-          if (userFound) {
+          if (userFound) { console.log("tt23"); console.log(userFound);
             models.Message.create({ 
               title: title,
               content: content,
@@ -55,10 +55,10 @@ module.exports = {
               attachment: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
                
               userId: userFound.id,
-            }).then(function (newMessage) {
+            }).then(function (newMessage) {console.log(newMessage);
               done(newMessage);
             });
-          } else {
+          } else {console.log("tt23 not");
             res.status(404).json({ error: "user nt found" });
           }
         },
@@ -178,7 +178,10 @@ module.exports = {
     },
   })
     .then((comment) => res.status(200).json(comment))
-    .catch((error) => res.status(400).json({ error: "Erreur  commentaire" }));
+    .catch((error) => 
+    {console.log(error);
+    res.status(400).json({ error: "Erreur  commentaire" })
+});
   },
 };
 

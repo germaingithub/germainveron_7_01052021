@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "cache-loader": "^4.1.0",
+    "core-js": "^3.14.0"
+  }
+}

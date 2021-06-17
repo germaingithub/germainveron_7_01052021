@@ -43,7 +43,7 @@ exports.router = (function() {
     apiRouter.route("/messages/new/").post( multer, messagesCtrl.createMessage);
     apiRouter.route("/messages/").get( multer, messagesCtrl.listMessages);
     apiRouter.route("/messages/:id").put( multer, messagesCtrl.modifyPost);
-    apiRouter.route("/messages/:id").delete( multer, messagesCtrl.deletePost);
+    apiRouter.route("/messages/:id").delete(multer, messagesCtrl.deletePost);
    
     //likes
     apiRouter.route("/messages/:messageId/vote/like").post(likesCtrl.likePost);
