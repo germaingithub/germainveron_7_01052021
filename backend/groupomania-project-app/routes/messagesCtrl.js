@@ -173,7 +173,7 @@ module.exports = {
 
   getAllComments: (req, res, next) => {
   Comment.findAll({
-    where: {
+    where: { 
       Message_id: req.params.id,
     },
   })

@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: "gren",
       },
+      //Comment: [],
     },
     {
       classMethods: {
@@ -19,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "userId",
             defaultValue: "userId",
             allowNull: false,
-          });
+          })
+          models.Message.hasMany(models.Comments);
         },
       },
     }

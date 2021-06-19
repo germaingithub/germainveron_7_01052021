@@ -3,7 +3,7 @@
 <NavbarPost />
 
 <Post
-    v-for="post in posts"
+    v-for="post in posts" 
     :username ="post.username"
     :title="post.title"
     :content ="post.content"
@@ -122,7 +122,7 @@ authorization: 'Bearer ' + localStorage.getItem('token')
         console.log(e + "Impossible d'éditer le post, une erreur est survenue");
 })
 },
-setComment(event){
+setComment(event){ console.log(event);
 this.contentComment = event.target.value
 },
 deletePost(id) {console.log(id);

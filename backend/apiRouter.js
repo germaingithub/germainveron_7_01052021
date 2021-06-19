@@ -46,8 +46,10 @@ exports.router = (function() {
     apiRouter.route("/messages/:id").delete(multer, messagesCtrl.deletePost);
    
     //likes
-    apiRouter.route("/messages/:messageId/vote/like").post(likesCtrl.likePost);
-    apiRouter.route("/messages/:messageId/vote/dislike").post(likesCtrl.dislikePost);
+    apiRouter.route("/messages/:Message_id/vote/like").post(likesCtrl.likePost);
+    apiRouter
+      .route("/messages/:Message_id/vote/dislike")
+      .post(likesCtrl.dislikePost);
 
     //comments
     apiRouter.route("/:id/comment").post(messagesCtrl.createComment);
