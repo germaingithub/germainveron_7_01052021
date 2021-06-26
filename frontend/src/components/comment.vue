@@ -14,10 +14,7 @@
 export default {
     name: 'Comment',
     props: {
-        //commentUsername: {
-         //   type: String,
-          //  default: ""
-        //},
+        
         contentComment: {
             type: String,
             default: ""

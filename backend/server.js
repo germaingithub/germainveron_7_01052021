@@ -11,7 +11,7 @@ server.use(cors());
 // Body Parser configuration
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
-server.use(express.static(path.join(__dirname, "public")));
+server.use(express.static(path.join(__dirname, "/public")));
 // Configure routes
 server.get("/", function(req, res) {
   res.setHeader("Content-Type", "text/html");

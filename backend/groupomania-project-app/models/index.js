@@ -36,6 +36,7 @@ fs.readdirSync(__dirname)
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
+    
     db[modelName].associate(db);
   }
 });
@@ -47,21 +48,35 @@ db.user = require("./user")(sequelize, Sequelize);
 db.post = require("./message")(sequelize, Sequelize);
 db.comments = require("./comments")(sequelize, Sequelize);
 
-db.user.hasMany(db.post);
+db.user.hasMany(db.post, {
+  foreignKey: "userId",
+  onDelete: "cascade",
+  hooks: true,
+ 
+});
+
 db.post.belongsTo(db.user, {
   foreignKey: "userId",
   defaultValue: "gren",
+
 });
 
-db.user.hasMany(db.comments);
-
+db.user.hasMany(db.comments, {
+ 
+});
 db.comments.belongsTo(db.user, {
   foreignKey: "userId",
+
 });
-db.post.hasMany(db.comments);
+db.post.hasMany(db.comments, { 
+
+});
 
 db.comments.belongsTo(db.post, {
   foreignKey: "userId",
+
 });
+
+
 
 module.exports = db;

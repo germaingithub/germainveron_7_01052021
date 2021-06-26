@@ -3,6 +3,10 @@ var jwtUtils = require("../utils/auth");
 var models = require("../models");
 var asyncLib = require("async");
 const jwt = require('jsonwebtoken');
+
+const maskData = require('maskdata');
+const db = require('../models/index');
+const User = db.user;
 // Constants
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
@@ -89,65 +93,28 @@ module.exports = {
       }
     );
   },
-  login: function(req, res) {
-    // Params
-    var email = req.body.email;
-    var password = req.body.password;
-
-    if (email == null || password == null) {
-      return res.status(400).json({ error: "missing parameters" });
-    }
-
-    asyncLib.waterfall(
-      [
-        function(done) {
-          models.User.findOne({
-            where: { email: email },
-          })
-            .then(function(userFound) {
-              done(null, userFound);
-            })
-            .catch(function(err) {
-              return res.status(500).json({ error: "unable to verify user" });
-            });
-        },
-        function(userFound, done) {
-          if (userFound) {
-            bcrypt.compare(password, userFound.password, function(
-              errBycrypt,
-              resBycrypt
-            ) {
-              done(null, userFound, resBycrypt);
-            });
-          } else {
-            return res.status(404).json({ error: "user not exist in DB" });
-          }
-        },
-        function(userFound, resBycrypt, done) {
-          if (resBycrypt) {
-            done(userFound);
-          } else {
-            return res.status(403).json({ error: "invalid password" });
-          }
-        },
-      ],
-      function(userFound) {
-        if (userFound) {
-          return res.status(201).json({
-            userId: userFound.id,
-            token: jwtUtils.generateTokenForUser(userFound),
-            //token: jwt.sign(
-             // { userId: userFound._id },
-             // "7G2APt9ivpP3oUKZDWjwzO7SIp9ccXaI4Q5c8WZmwCMgRCy1IQ3k",
-             // { expiresIn: '24h' }
-           // ),
-          });
-        } else {
-          return res.status(500).json({ error: "cannot log on user" });
-        }
+  login: function (req, res, next) {
+  User.findOne({login:req.body.email})
+    .then((user) => {
+      if (!user) {
+        return res.status(401).json({ error: "Utilisateur non trouvé !" });
       }
-    );
-    
+      bcrypt
+        .compare(req.body.password, user.password)
+        .then((valid) => {
+          if (!valid) {
+            return res.status(401).json({ error: "Mot de passe incorrect!" });
+          }
+          res.status(200).json({
+            userId: user.id,
+            token: jwt.sign({ userId: user.id }, "RANDOM_TOKEN_SECRET", {
+              expiresIn: "24h",
+            }),
+          });
+        })
+        .catch((error) => res.status(500).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
   },
   findByPk: function (req, res){
       User.findByPk(req.params.id).then((user) => {
@@ -224,4 +191,17 @@ module.exports = {
       }
     );
   },
+   deleteUser: function (req, res)  {
+      const id = req.params.id;
+      console.log(req.data);
+      User.destroy({ 
+        where : { id: id }
+       })
+       
+          .then(() => res.status(200).json({ message: 'Utilisateur supprimé' }))
+          .catch((error) => { console.log(error);
+            res.status(500).json({ error })});
+        
+     
+    },
 };

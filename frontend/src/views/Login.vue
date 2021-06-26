@@ -88,13 +88,13 @@ export default {
       if (this.input.email != '' && this.input.password != '') {
         apiClient
           .post('api/users/login/', this.input)
-          .then(data => {
-            if (!data.token) {
+          .then(data => { 
+            if (!data.token) {console.log(data);
               this.errorMessage = 'Utilisateur introuvable'
             } else {
               localStorage.setItem('token', data.token)
               localStorage.setItem('userId', data.userId)
-              localStorage.setItem('username',data.username)
+             localStorage.setItem('username', JSON.stringify(data.username))
               router.push({ name: 'CreateMessage' })
             }
           })

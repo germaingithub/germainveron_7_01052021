@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "cache-loader": "^4.1.0",
-    "core-js": "^3.14.0"
+    "core-js": "^3.14.0",
+    "maskdata": "^1.1.6"
   }
 }

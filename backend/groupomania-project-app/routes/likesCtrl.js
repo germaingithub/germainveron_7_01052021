@@ -13,7 +13,7 @@ module.exports = {
     const userId = jwtUtils.getUserId(headerAuth);
 
     //params
-    const messageId = parseInt(req.params.messageId);
+    const messageId = parseInt(req.params.message_id);
 
     if (messageId <= 0) {
       return res.status(400).json({ error: "invalid parameters" });
@@ -23,7 +23,7 @@ module.exports = {
       [
         function(done) {
           models.Message.findOne({
-            where: { id: messageId },
+            where: { id: message_id },
           })
             .then(function(messageFound) {
               done(null, messageFound);
@@ -54,13 +54,13 @@ module.exports = {
             models.Like.findOne({
               where: {
                 userId: userId,
-                messageId: messageId,
+                message_id: message_id,
               },
             })
-              .then(function(userAlreadyLikedFound) {
+              .then(function (userAlreadyLikedFound) {
                 done(null, messageFound, userFound, userAlreadyLikedFound);
               })
-              .catch(function(err) {
+              .catch(function (err) {
                 return res
                   .status(500)
                   .json({ error: "unable to verify is user already liked" });
@@ -130,7 +130,7 @@ module.exports = {
     var userId = jwtUtils.getUserId(headerAuth);
 
     // Params
-    var messageId = parseInt(req.params.messageId);
+    var messageId = parseInt(req.params.message_id);
 
     if (messageId <= 0) {
       return res.status(400).json({ error: "invalid parameters" });
@@ -140,12 +140,12 @@ module.exports = {
       [
         function(done) {
           models.Message.findOne({
-            where: { id: messageId },
+            where: { id: message_id },
           })
-            .then(function(messageFound) {
+            .then(function (messageFound) {
               done(null, messageFound);
             })
-            .catch(function(err) {
+            .catch(function (err) {
               return res
                 .status(500)
                 .json({ error: "unable to verify message" });
@@ -171,13 +171,13 @@ module.exports = {
             models.Like.findOne({
               where: {
                 userId: userId,
-                messageId: messageId,
+                message_id: message_id,
               },
             })
-              .then(function(userAlreadyLikedFound) {
+              .then(function (userAlreadyLikedFound) {
                 done(null, messageFound, userFound, userAlreadyLikedFound);
               })
-              .catch(function(err) {
+              .catch(function (err) {
                 return res
                   .status(500)
                   .json({ error: "unable to verify is user already liked" });

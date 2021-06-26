@@ -9,17 +9,23 @@
     :content ="post.content"
     :likes ="post.likes"
     :attachment ="post.attachment"
-    :key="post.id" > 
-  <template v-slot:Comments v-if="post.Comments !== null">
+    :key="post.id" 
+    :getAllComments="post.id"
+    > 
+    
+  <template getAllComments(post.id) v-slot:Comments v-if="post.comments !== null">
     <div class="last-comments">
+     
                 <div class="comment-bloc"
-                  v-for="comment in post.comments"
-                  v-bind:key="comment.id">
+                  v-for="comment in comments"
+                  v-bind:key="comment.userId">
                   
                   <div class="comment-area">
-                  <p>{{ comment.content }}</p>
+                  <p class="bg-light"> {{ comment.content }}</p>
+                  <p> {{ comment.createdAt }}</p>
                 </div>
               </div>
+              
      </div> 
   </template>
   <template v-slot:EditCom>
@@ -30,13 +36,14 @@
           ></textarea> 
        </div>
       <div>
-        
+        <button type="display" @click.prevent="getAllComments(post.id)" id="voircom" v-if="userId == post.userId || isAdmin == 1">Voir les commentaires</button>
         <button @click.prevent="sendCom(post.id)" id="sendcom" type="submit" aria-label="Publication d'un commentaire">Commenter</button>
         <button type="submit" @click.prevent="deletePost(post.id)" id="delpost" v-if="userId == post.userId || isAdmin == 1">Supprimer le post</button>
         </div>
       </form>
     </div>
  </template>
+ <CommentDisplay />
 </Post>
   <Footer />
   </div>
@@ -46,25 +53,30 @@
 import NavbarPost from '../components/NavPost'
 import Post from './Post.vue'
 import Footer from '../components/Footer'
+import CommentDisplay from '../components/commentdisplay.vue'
 import axios from "axios";
 export default {
   name: 'allpost', 
   components: {
-  NavbarPost, Post, Footer    
+  NavbarPost, Post,CommentDisplay, Footer    
 },
 data() {
-    
+  
     return {
-    posts: "",
+      
+    posts: [],
+    comments:"",
     userId:localStorage.getItem("userId"),
     isAdmin: 1,
+    
     post: {
       userId:localStorage.getItem('userId'),
       title:"", 
       content: "",
       attachment:"image",
-      likes:"",
+      //likes:"",
       comments: [],
+      getAllComments:"post.id",
     },
     id:"",
     user: {
@@ -92,9 +104,13 @@ axios
         
         this.posts = response.data;
         console.log(response.data);
+      
+        
     })
 },
+
 methods: {
+  
     postImage() {
         
         return `/images/${this.post.attachment}`
@@ -107,24 +123,43 @@ methods: {
         Message_id: id
     };
     console.log(comment);
-axios.post('http://localhost:8081/api/' + id + '/comment', comment,
-{
-headers: {
-authorization: 'Bearer ' + localStorage.getItem('token')
-}
-})
-.then((res) => {
+  axios.post('http://localhost:8081/api/' + id + '/comment', comment,
+  {
+  headers: {
+  authorization: 'Bearer ' + localStorage.getItem('token')
+  }
+  })
+  .then((res) => {
     console.log(res);
    
     alert("Commentaire posté");
-})
-.catch(e => {
+  })
+  .catch(e => {
         console.log(e + "Impossible d'éditer le post, une erreur est survenue");
-})
+  })
+  },
+  setComment(event){ console.log(event);
+  this.contentComment = event.target.value
+  },
+
+//get comments
+
+getAllComments(id) { 
+    
+axios
+.get('http://localhost:8081/api/' + id + '/comment', {
+    headers: {
+        'authorization': 'Bearer ' + localStorage.getItem('token')
+            }})
+    .then((comments) => { console.log(comments.data.content);
+        
+        this.comments = comments.data; 
+        
+      
+     
+    })
 },
-setComment(event){ console.log(event);
-this.contentComment = event.target.value
-},
+
 deletePost(id) {console.log(id);
     
     axios.delete('http://localhost:8081/api/messages/' + id, {
@@ -137,12 +172,18 @@ deletePost(id) {console.log(id);
         console.log(response);
         this.$router.go()
     })
-    .catch(error => {
+    .catch((error) => {
+      alert("Veuillez controler et supprimer vos posts avant de pouvoir supprimer votre compte");
       window.alert(error);
  })
 }
+
 }
 }
+
+  
+  
+
 </script>
 
 <style scoped>

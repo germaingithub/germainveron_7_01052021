@@ -3,15 +3,23 @@
         <section class="section">
             <div class="container-fluid">
                 <h1>Votre profil</h1>
-                <div class="container-fluid bg-info col-6">
+                <div class="container-fluid bg-dark col-6">
                     <div>
-                    <img alt="Profil image" class="rounded-circle mt-2" width="100" height="100" src="https://images.unsplash.com/photo-1497316730643-415fac54a2af?ixid=MnwxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmlsZXxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60">
-      </div>
-                
-                <div>
-                <p> {{ username }}</p>
+                    <img alt="Profil image" width="100" height="100" class="rounded-circle mt-2" src="https://images.unsplash.com/photo-1493612276216-ee3925520721?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+    </div>
+    <div>
+        <h3 class="text-light ">Hello, {{username}}</h3>
+        <h4 class="text-light ">What's on your mind?</h4>
+    </div>
+                <div class="form-group">
+                    <div class="col mx-auto">
+                <b-link class="btn btn-light mr-5 font-weight-bold mb-5" to="/messages/">Voir les posts</b-link>
+                <b-link class="btn btn-light font-weight-bold mb-5" to="/messages/new">Ecrire un post</b-link>
                 </div>
-                 <b-link class="btn btn-light btn-lg mb-5" to="Allpost">Tout les posts</b-link>
+                <div>
+                <b-link class="btn btn-danger font-weight-bold mb-5" @click.prevent="deleteUser">Supprimer</b-link>
+                </div>
+                </div>
                 </div>
             </div>
         </section>
@@ -19,8 +27,8 @@
 </template>
 
 <script>
-import {required} from "vuelidate/lib/validators"; 
-//import axios from "axios";
+//import {required} from "vuelidate/lib/validators"; 
+import axios from "axios";
 export default {
 name: 'profile',
 data() {
@@ -28,22 +36,60 @@ data() {
     token: localStorage.getItem('token'),   
     image: "",
     name: "",
-    username: localStorage.getItem('username'),
+    username: JSON.parse(localStorage.getItem('username')),
+    userId: parseInt(localStorage.getItem('userId')),
+    bio: localStorage.getItem('bio'),
     submited: false,
         }
     },
-validations: {
-   name: {
-        required,
-    },
+//validations: {
+ //  name: {
+      //  required,
+  //  },
     
-},
+//},
 methods:{
   handleFileUpload(){
    
       
     this.image = this.$refs.image.files[0];
 }, 
+infoUser() {
+    axios.get('http://localhost:8081/api/users/me', {
+        headers: {
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+            }})
+            .then ( res => {
+                console.log(res);
+                localStorage.setItem('username');
+                localStorage.setItem('bio');
+            })
+            .catch ((error) => {
+        console.log(error);
+    })
+    
+},
+deleteUser() {
+    const id = this.userId;
+    const isAdmin = 1 ;
+    if(id == id || isAdmin == 0) {
+    axios.delete('http://localhost:8081/api/users/me/' + id, {
+        headers: {
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+            }})
+    .then(res => {
+        console.log(res);
+        alert("Votre compte à bien été supprimé !");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        localStorage.removeItem("username");
+        this.$router.push('/users/login/');
+    })
+    .catch ((error) => {
+        console.log(error);
+    })
+    }
+}
 } 
 }
 </script>

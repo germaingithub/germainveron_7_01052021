@@ -10,6 +10,7 @@ const auth = require('./groupomania-project-app/utils/authi')
 const multer = require('./groupomania-project-app/utils/multer-config')
 const path = require("path");
 const helmet = require("helmet");
+const userCtrl = require("./groupomania-project-app/controllers/user");
 //const rateLimit = require('express-rate-limit');
 //const rateLimiter = rateLimit ({
  // windowMs: 5 * 60 * 1000,
@@ -35,25 +36,25 @@ exports.router = (function() {
 
     //users routes
     apiRouter.route("/users/register/").post(usersCtrl.register);
-    apiRouter.route("/users/login/").post(usersCtrl.login);
+    apiRouter.route("/users/login/").post( userCtrl.login);
     apiRouter.route("/users/me/").get(usersCtrl.getUserProfile);
-    apiRouter.route("/users/me/").put(usersCtrl.updateUserProfile);
+    apiRouter.route("/users/me/:id").put(usersCtrl.updateUserProfile);
+    apiRouter.route("/users/me/:id").delete( usersCtrl.deleteUser);
 
     //Messages routes
-    apiRouter.route("/messages/new/").post( multer, messagesCtrl.createMessage);
-    apiRouter.route("/messages/").get( multer, messagesCtrl.listMessages);
-    apiRouter.route("/messages/:id").put( multer, messagesCtrl.modifyPost);
-    apiRouter.route("/messages/:id").delete(multer, messagesCtrl.deletePost);
+    apiRouter.route("/messages/new/").post(auth, multer, messagesCtrl.createMessage);
+    apiRouter.route("/messages/").get(auth, multer, messagesCtrl.listMessages);
+    apiRouter.route("/messages/:id").put(auth, multer, messagesCtrl.modifyPost);
+    apiRouter.route("/messages/:id").delete(auth, multer, messagesCtrl.deletePost);
    
     //likes
     apiRouter.route("/messages/:Message_id/vote/like").post(likesCtrl.likePost);
-    apiRouter
-      .route("/messages/:Message_id/vote/dislike")
-      .post(likesCtrl.dislikePost);
+    apiRouter.route("/messages/:Message_id/vote/dislike").post(likesCtrl.dislikePost);
 
     //comments
-    apiRouter.route("/:id/comment").post(messagesCtrl.createComment);
-    apiRouter.route("/:id/comment").get(messagesCtrl.getAllComments);
+    apiRouter.route("/:id/comment").post(auth, messagesCtrl.createComment);
+    apiRouter.route("/:id/comment").get( messagesCtrl.getAllComments);
+    apiRouter.route("/:id/comment").delete(messagesCtrl.deleteComments);
 
     module.exports = apiRouter;
 })();

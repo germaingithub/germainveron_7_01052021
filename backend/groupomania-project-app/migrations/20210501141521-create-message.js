@@ -12,6 +12,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         defaultValue: "gren",
+        foreignkey: true,
         references: {
           model: "Users",
           key: "id",
@@ -46,5 +47,6 @@ module.exports = {
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Messages");
+    
   },
 };

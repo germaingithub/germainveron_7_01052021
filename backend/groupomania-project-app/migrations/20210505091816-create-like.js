@@ -8,7 +8,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      messageId: {
+      //messageId
+      message_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {

@@ -103,9 +103,11 @@ export default {
           .post('api/users/register/', this.input)
           .then(data => {
            this.data = data.data;
+           this.$router.push('/users/login/');
            alert("Merci ! Votre compte est bien crée");
-              location.href = "http://localhost:8081/?#/users/login/";
+              
               localStorage.setItem('username', this.input.username)
+              localStorage.setItem('bio', this.input.bio)
           })
           
           .catch(error => {

@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token,"7G2APt9ivpP3oUKZDWjwzO7SIp9ccXaI4Q5c8WZmwCMgRCy1IQ3k");
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
     if (req.body.userId && req.body.userId !== userId) {
       throw "Invalid user ID";
@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
 
       next();
     }
-  } catch (error) {
-    res.status(401).json({ error: error ("requete non authentifie"),});
+  } catch { 
+    res.status(401).json({ error:  ("requete non authentifie"),});
   }
 };

@@ -20,8 +20,10 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: "userId",
             defaultValue: "userId",
             allowNull: false,
-          })
-          models.Message.hasMany(models.Comments);
+          });
+          models.Message.hasMany(models.Comments, {
+
+          });
         },
       },
     }

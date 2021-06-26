@@ -12,20 +12,20 @@ module.exports = (sequelize, DataTypes) => {
     
     static associate(models) {
       // define association here
-      models.Comments.belongsTo(models.User, {
-        foreignKey: 'username'
-        
-      })
-      models.Comments.belongsTo (models.Message, {
-        foreignKey:'Message_id'
-      })
+    models.Comments.belongsTo(models.User, {
+      foreignKey: "username",
+    });
+      models.Comments.belongsTo(models.Message, {
+        foreignKey: "Message_id",
+      });
     }
   };
   Comments.init({
    
     Message_id: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
-    content: DataTypes.STRING
+    content: DataTypes.STRING,
+ 
   }, {
     sequelize,
     modelName: 'Comments',
