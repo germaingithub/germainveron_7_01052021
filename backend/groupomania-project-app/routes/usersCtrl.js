@@ -7,6 +7,9 @@ const jwt = require('jsonwebtoken');
 const maskData = require('maskdata');
 const db = require('../models/index');
 const User = db.user;
+const Message = db.post;
+const Comment = db.comments;
+const fs = require("fs");
 // Constants
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
@@ -94,7 +97,7 @@ module.exports = {
     );
   },
   login: function (req, res, next) {
-  User.findOne({login:req.body.email})
+  User.findOne({email:maskData.maskEmail2(req.body.email)})
     .then((user) => {
       if (!user) {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
@@ -191,17 +194,103 @@ module.exports = {
       }
     );
   },
-   deleteUser: function (req, res)  {
-      const id = req.params.id;
-      console.log(req.data);
-      User.destroy({ 
-        where : { id: id }
-       })
-       
-          .then(() => res.status(200).json({ message: 'Utilisateur supprimé' }))
-          .catch((error) => { console.log(error);
-            res.status(500).json({ error })});
-        
-     
-    },
+   deleteUser: function(req, res, next){
+    // Regarder la doc Sequelize
+    // delete cascade : true
+
+    // Récupération de l'en-tête d'authorisation
+    let headerAuth = req.headers['authorization'];
+
+    // Verifier que ce token est valide pour faire une requête en BDD
+    let userId = jwtUtils.getUserId(headerAuth);
+
+    asyncLib.waterfall([
+      function(done){
+        console.log(1 + ": Récupérer l'utilisateur dans la base de données");
+      
+        // Récupérer l'utilisateur dans la base de données
+        User.findOne({
+          attributes : ['id','email','username'],
+          where: {id: userId},
+          include: [{
+            //model: models.Comment,
+            model: models.Message
+          }]
+        })
+      
+        .then(likeFound => {
+          console.log(3 + ": Verification des Comment liées pour suppression...");
+          // Verification des Comment liées pour suppression
+        Comment.destroy({
+            where: { userId },
+            cascade : true,
+            include: [{
+              model: models.Comments,
+
+              model: models.Message
+            }]
+          })
+          done(null);
+        })
+      },
+
+      function(done){
+        console.log(4 + ": Récupératon des messages de l'utilisateur...");
+        // Récuperation de tous les messages de l'utilisateur...
+       Message.findAll({
+          attributes:['id'],
+          where: { userId },
+        })
+        .then(function(messages){
+          console.log(5 + ": Supression des likes & commentaires liés aux messages...");
+          for(message in messages){
+            
+            Comment.destroy({
+              where: { Message_id: messages[message].id },
+            });
+          }
+          done(null);
+        })
+        .catch(function(err){
+          return res.status(500).json({'error':'faillure to delete Like, Comment or Mesage!' + err});
+        })
+      },
+
+      function(done){
+        Message.findAll({
+          where: { userId }
+        })
+        .then(function(messages){
+          console.log(6 + ": Supression des images des messages...");
+          for(message in messages){
+            let filename = messages[message].attachment.split('/images/')[1];
+            if(filename !=null){
+                fs.unlinkSync(`public/images/${filename}`);
+            }
+            Message.destroy({
+              where: {userId}
+            })
+          }
+          done(null);
+        })
+        .catch(function(err){
+          return res.status(500).json({'error':'faillure to delete Like, Comment or Mesage!' + err});
+        })
+      },
+
+      function(completed, done){
+        console.log(8 + ": Supression du compte de l'utilisateur");
+        // Supression du compte de l'utilisateur
+        User.destroy({
+          where: { id : userId }
+        })
+        .then(function(){
+          return res.status(201).json({'Message':'unsubscribe sucess'});
+        })
+        .catch(function(err){
+          return res.status(500).json({'error':'faillure to unsubscribe!' + err});
+        });
+      }
+    ])
+  }
 };

@@ -8,8 +8,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      //messageId
-      message_id: {
+      message_id:{
+      //message_id: 
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
@@ -20,7 +20,7 @@ module.exports = {
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        defaultValue: "gren",
+        defaultValue: "grten",
         references: {
           model: "Users",
           key: "id",

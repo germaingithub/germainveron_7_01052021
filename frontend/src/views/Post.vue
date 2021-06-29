@@ -5,9 +5,7 @@
                 <img class="rounded-circle" width="50"
                     src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80">
             </div>
-            <div class="text-white font-weight-bold">
-                {{ username + " " + ""}}
-            </div>
+          
             <div class="card-text">
                 <h2 class="ml-3 text-light text-uppercase"> {{ title }} </h2>
                 <h4 class="ml-3 text-light"> {{ content }} </h4>
@@ -35,7 +33,7 @@
 
             username: {
                 type: String,
-                default: ""
+               
             },
             title: {
                 type: String,
@@ -63,6 +61,9 @@
             },
             comments: {
                 type: String
+            },
+             userId: {
+                type: Number
             }
         },
 

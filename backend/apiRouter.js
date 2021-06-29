@@ -11,12 +11,12 @@ const multer = require('./groupomania-project-app/utils/multer-config')
 const path = require("path");
 const helmet = require("helmet");
 const userCtrl = require("./groupomania-project-app/controllers/user");
-//const rateLimit = require('express-rate-limit');
-//const rateLimiter = rateLimit ({
- // windowMs: 5 * 60 * 1000,
-  //max: 5,
-  //message: "Trop de tentatives échouées, réessayez dans 5 minutes"
-//});
+const rateLimit = require('express-rate-limit');
+const limiter = rateLimit ({
+  windowMs: 5 * 60 * 1000,
+  max: 5,
+  message: "Trop de tentatives échouées, réessayez dans 5 minutes"
+});
 
 app.use(helmet());
 
@@ -35,7 +35,7 @@ exports.router = (function() {
   const apiRouter = express.Router();
 
     //users routes
-    apiRouter.route("/users/register/").post(usersCtrl.register);
+    apiRouter.route("/users/register/").post( usersCtrl.register);
     apiRouter.route("/users/login/").post( userCtrl.login);
     apiRouter.route("/users/me/").get(usersCtrl.getUserProfile);
     apiRouter.route("/users/me/:id").put(usersCtrl.updateUserProfile);
@@ -53,7 +53,7 @@ exports.router = (function() {
 
     //comments
     apiRouter.route("/:id/comment").post(auth, messagesCtrl.createComment);
-    apiRouter.route("/:id/comment").get( messagesCtrl.getAllComments);
+    apiRouter.route("/:id/comment").get(auth, messagesCtrl.getAllComments);
     apiRouter.route("/:id/comment").delete(messagesCtrl.deleteComments);
 
     module.exports = apiRouter;

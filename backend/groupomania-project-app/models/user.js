@@ -15,10 +15,10 @@ module.exports = (sequelize, DataTypes) => {
          
             // associations can be defined here
             models.User.hasMany(models.Message, {
-
+              attributes: ["id", "title", "content", "attachment"]
             });
             models.Message.belongsto(models.User, {
-
+              attributes: ["id", "title", "content", "attachment"]
             });
         },
       },

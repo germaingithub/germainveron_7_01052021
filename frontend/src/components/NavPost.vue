@@ -4,12 +4,12 @@
     
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
-    <b-collapse id="nav-collapse" is-nav>
-    <b-navbar-nav class="ml-auto">
-        <b-nav-item size="sm" class="mr-sm-2 font-weight-bold tx-white"><router-link to="/messages" class="nav-link">Tous les posts</router-link></b-nav-item>
-        <b-nav-item size="sm" class="mr-sm-2 font-weight-bold tx-white"><router-link to="/messages/new" class="nav-link">Ajouter un post</router-link></b-nav-item>
-        <b-nav-item size="sm" class="mr-sm-2 font-weight-bold tx-white"><router-link to="/users/me" class="nav-link">Mon profil</router-link></b-nav-item>
-        <b-nav-item size="sm" class="mr-sm-2 mt-2 font-weight-bold tx-white" @click="logout" >Se déconnecter</b-nav-item>
+    <b-collapse id="nav-collapse " is-nav>
+    <b-navbar-nav class="ml-auto bg-light">
+        <b-nav-item size="sm" class="mr-sm-2 font-weight-bold"><router-link to="/messages" class="nav-link">Tous les posts</router-link></b-nav-item>
+        <b-nav-item size="sm" class="mr-sm-2 font-weight-bold"><router-link to="/messages/new" class="nav-link">Ajouter un post</router-link></b-nav-item>
+        <b-nav-item size="sm" class="mr-sm-2 font-weight-bold"><router-link to="/users/me" class="nav-link">Mon profil</router-link></b-nav-item>
+        <b-nav-item size="sm" class="mr-sm-2 mt-2 font-weight-bold" @click="logout" >Se déconnecter</b-nav-item>
     </b-navbar-nav>
 
     </b-collapse>

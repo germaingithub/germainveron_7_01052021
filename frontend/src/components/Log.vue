@@ -84,16 +84,18 @@ export default {
     }
   },
   methods: {
-    login () {
-      if (this.input.email != '' && this.input.password != '') {
+    login () { 
+      if (this.input.email != '' && this.input.password != '') { 
         apiclient
           .post('/api/users/login/', this.input)
           .then(data => {
-            if (!data.token) {
+            if (!data.token) { 
               this.errorMessage = 'Utilisateur introuvable'
-            } else {
+            } else { console.log(data);
               localStorage.setItem('token', data.token)
               localStorage.setItem('username', JSON.stringify(data.username))
+              localStorage.setItem('isAdmin',data.isAdmin)
+             
               router.push({ name: 'Login' })
               location.href = "http://localhost:8080/?#/messages/new";
             }

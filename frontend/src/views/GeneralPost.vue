@@ -11,22 +11,24 @@
     :attachment ="post.attachment"
     :key="post.id" 
     :getAllComments="post.id"
+    :userId="post.userId"
     > 
     
   <template getAllComments(post.id) v-slot:Comments v-if="post.comments !== null">
-    <div class="last-comments">
+    <div class=" last-comments bg-dark " role="alert" aria-live="assertive" aria-atomic="true">
      
-                <div class="comment-bloc"
+                <div class="toast-header comment-bloc"
                   v-for="comment in comments"
                   v-bind:key="comment.userId">
-                  
-                  <div class="comment-area">
-                  <p class="bg-light"> {{ comment.content }}</p>
+                  <div class="comment-area me-auto">
+                  <p class="bg-light rounded-circle toast-body"> {{ comment.content }}</p>
                   <p> {{ comment.createdAt }}</p>
                 </div>
               </div>
               
+              
      </div> 
+     
   </template>
   <template v-slot:EditCom>
     <div>
@@ -36,10 +38,13 @@
           ></textarea> 
        </div>
       <div>
-        <button type="display" @click.prevent="getAllComments(post.id)" id="voircom" v-if="userId == post.userId || isAdmin == 1">Voir les commentaires</button>
-        <button @click.prevent="sendCom(post.id)" id="sendcom" type="submit" aria-label="Publication d'un commentaire">Commenter</button>
-        <button type="submit" @click.prevent="deletePost(post.id)" id="delpost" v-if="userId == post.userId || isAdmin == 1">Supprimer le post</button>
-        </div>
+        
+        <button type="display" class="btn btn-outline-primary mr-1 mb-1" @click.prevent="getAllComments(post.id)" id="voircom" >Voir les commentaires</button>
+        <button @click.prevent="sendCom(post.id)" class="btn btn-primary" id="sendcom" type="submit" aria-label="Publication d'un commentaire">Commenter</button>
+         <div v-if="userId == post.userId || userId == 7 ">
+        <button type="submit" class="btn btn-outline-danger mb-1" @click.prevent="deletePost(post.id)" id="delpost">Supprimer le post</button> 
+         </div>
+        </div> 
       </form>
     </div>
  </template>
@@ -61,13 +66,14 @@ export default {
   NavbarPost, Post,CommentDisplay, Footer    
 },
 data() {
-  
+
     return {
-      
+     
     posts: [],
+    userId:localStorage.getItem('userId'),
     comments:"",
-    userId:localStorage.getItem("userId"),
     isAdmin: 1,
+    username:localStorage.getItem('username'),
     
     post: {
       userId:localStorage.getItem('userId'),
@@ -77,6 +83,8 @@ data() {
       //likes:"",
       comments: [],
       getAllComments:"post.id",
+      id:"",
+      isAdmin: localStorage.getItem('userId'),
     },
     id:"",
     user: {
@@ -87,9 +95,11 @@ data() {
         userId: "",
         Message_id:"",
         content: "",
+        createdAt: ''
       },
 contentComment: {
-                content: ''
+                content: '',
+                createdAt: ''
             },
 }
 },
@@ -160,7 +170,7 @@ axios
     })
 },
 
-deletePost(id) {console.log(id);
+deletePost(id) {
     
     axios.delete('http://localhost:8081/api/messages/' + id, {
     headers: {
@@ -173,7 +183,7 @@ deletePost(id) {console.log(id);
         this.$router.go()
     })
     .catch((error) => {
-      alert("Veuillez controler et supprimer vos posts avant de pouvoir supprimer votre compte");
+      
       window.alert(error);
  })
 }
@@ -191,4 +201,6 @@ deletePost(id) {console.log(id);
  max-width: 200px;
  max-height: 200px;
 }
+
+
 </style>

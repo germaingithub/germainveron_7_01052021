@@ -4,8 +4,11 @@
 
   <div class="content">
     <div class="cursor" id="cursor"></div>
-    <div class="title" id="title"><span>Welcome to Instamania</span></div>
-    <router-link id="button" class=" button nav-link border border-dark border-3 shadow-lg p-3 mb-5 rounded w-25 p-3 fs-1" to="/signup">Signup</router-link>
+    <div class="title mb-0" id="title"><span>Welcome to Instamania</span></div>
+    <h2 class=" mt-0 mb-0">by</h2>
+    <img class="mt-0" width="250" height="250" src="../assets/logogm.png" alt="Logo GM">
+    <router-link id="button" class=" button card-text nav-link text-dark border border-dark border-5 shadow-lg p-3 mb-5 bg-light rounded w-25 p-3 fs-1 fw-bold mb-5 mt-0 " to="/signup"><h2 class="tx-dark">Signup</h2></router-link>
+ 
   </div>
 </div>
 </template>
@@ -27,7 +30,7 @@ body {
   width:100vw;
   max-width:100%;
   height:100vh;
-  background: url('https://images.unsplash.com/photo-1501349800519-48093d60bde0?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+  background: url('https://images.unsplash.com/photo-1487088678257-3a541e6e3922?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80');
   background-size:cover;
   background-position:center center;
 }

@@ -14,6 +14,9 @@
       <li class="nav-item">
         <router-link class="nav-link text-white" to="/users/login/">Login</router-link>
       </li>
+      <li class="nav-item">
+        <router-link class="nav-link text-white" to="/messages/">Tout les messages</router-link>
+      </li>
     </ul>
 <img id="image" class="position-relative end-1 me-3" src="../assets/logo_white.png" width="250" height="100" alt="" />
   </div>

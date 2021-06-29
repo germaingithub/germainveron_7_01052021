@@ -11,12 +11,12 @@ module.exports = {
       Message_id: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        foreignkey:true,
+        foreignkey: true,
       },
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
-        defaultValue: "grtten",
+        defaultValue: "gen",
       },
       content: {
         allowNull: false,

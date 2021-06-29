@@ -6,7 +6,7 @@ const Post = db.post;
 const User = db.user;
 const fs = require("fs");
 const Comment = db.comments;
-//const xss = require("xss");
+const xss = require("xss");
 
 //constants
 const TITLE_LIMIT = 2;
@@ -51,8 +51,8 @@ module.exports = {
             console.log("tt23");
             console.log(userFound);
             models.Message.create({
-              title: title,
-              content: content,
+              title: xss(title),
+              content: xss(content),
               likes: 0,
               attachment: `${req.protocol}://${req.get("host")}/images/${
                 req.file.filename
@@ -94,12 +94,12 @@ module.exports = {
       attributes: fields !== "*" && fields != null ? fields.split(",") : null,
       limit: !isNaN(limit) ? limit : 5,
       offset: !isNaN(offset) ? offset : null,
-      include: [
-        {
-          model: models.User,
-          attributes: ["username"],
-        },
-      ],
+      // include: [
+      //   {
+      //    model: models.User,
+      //     attributes: ["username"],
+      //   },
+      // ],
     })
       .then(function (messages) {
         if (messages) {
@@ -146,13 +146,13 @@ module.exports = {
     let userId = jwtUtils.getUserId(headerAuth);
 
     // Récupération des paramètres
-    let messageId = parseInt(req.params.id);
+    let messageId = parseInt(req.params.id); console.log(req.params.id);
 
     asyncLib.waterfall(
       [
         // Récupérer l'utilisateur dans la base de données (correspondant au token)
         function (done) {
-          models.User.findOne({
+          User.findOne({
             where: { id: userId },
           })
             .then(function (userFound) {
@@ -160,39 +160,88 @@ module.exports = {
               done(null, userFound);
             })
             .catch(function (err) {
-              console.log(err);
               // Sinon, on retourne une erreur
               return res.status(500).json({ error: "unable to verify user" });
             });
         },
 
+        function (userFound, done) {
+          // Verifier si l'utilisateur dispose des droits admin
+          User.findOne({
+            attributes: ["isAdmin"],
+            where: { isAdmin: userFound.isAdmin },
+          })
+            .then(function (userFound) { console.log(userFound);
+              if (userFound.isAdmin == true || userFound.isAdmin == false) {
+                done(null);
+              } else {
+                return res
+                  .status(403)
+                  .json({ error: "you do not have sufficient privileges" });
+              }
+            })
+            .catch(function (err) {
+              return res.status(500).json({ err });
+            });
+        },
+
         function (done) {
-          console.log(done);
           // Suppression des images uploadés (si presentes)
           Post.findOne({
             where: { id: messageId },
           })
-            .then((post) => {
-              if (post.attachment !== null) {
-                const filename = post.attachment.split("/images/")[1];
-                fs.unlink(`images/${filename}`, () => {
-                  models.Message.destroy({ where: { id: req.params.id } })
-                    .then(() =>
-                      res.status(200).json({ message: "Post supprimé !" })
-                    )
-
-                    .catch((error) => res.status(400).json({ error }));
-                });
+            .then(function (message) {
+              let filename = message.attachment.split("/images/")[1];
+              if (filename != null) {
+                fs.unlinkSync(`public/images/${filename}`);
               }
-              models.Message.destroy({ where: { id: req.params.id } })
-                .then(() =>
-                  res.status(200).json({ message: "Post supprimé !" })
-                )
-                .catch((error) => res.status(400).json({ error }));
+              done(null, message);
             })
-            .catch((error) =>
-              res.status(400).json({ message: "Post iouvable", error: error })
-            );
+            .catch(function (err) {
+              return res
+                .status(500)
+                .json({ error: "unable to delete file! - " + err });
+            });
+        },
+        function (messageId, done) {
+          // S'il y a des Commentaires liée au messages, il seront supprimés.
+          if (messageId) {
+            Comment.destroy({
+              where: { message_id: messageId.id },
+            })
+              .then(function () {
+                done(null, messageId);
+              })
+              .catch(function (err) {
+                return res
+                  .status(500)
+                  .json({ error: "unable to remove Comment in DB" + err });
+              });
+          } else {
+            done(null);
+          }
+        },
+
+        function (messageId, done) {
+          // Récupérer l'id du message concerné
+          if (messageId) {
+            models.Message.destroy({
+              where: { id: messageId.id },
+            })
+              .then(function (deleteMessage) {
+                // Si tout c'est bien passé, un information de réussite est envoyée.
+                done(deleteMessage);
+              })
+              .catch(function (err) {
+                // En cas de problème, un message d'erreur est retourné.
+                res
+                  .status(500)
+                  .json({ error: "unable to delete message in DB" });
+              });
+          } else {
+            // En cas de problème, un message d'erreur est retourné.
+            res.status(404).json({ error: "message not found" });
+          }
         },
       ],
       function (deleteMessage) {
@@ -246,20 +295,20 @@ module.exports = {
     let userId = jwtUtils.getUserId(headerAuth);
 
     // Récupération des paramètres
-    let messageId = parseInt(req.params.messageId);
+    let message_id = parseInt(req.body.message_id);
+    console.log(req.params);
     let commentId = Comment.findAll({
       where: {
         Message_id: req.params.id,
       },
       attributes: ["userId", "content"],
     });
-    ;
-
-    asyncLib.waterfall( 
+    asyncLib.waterfall(
       [
         // Récupérer l'utilisateur dans la base de données (correspondant au token)
-        function (done) {console.log(req.params);
-          models.User.findOne({
+        function (done) {
+          console.log(req.params);
+          User.findOne({
             where: { id: userId },
           })
             .then(function (userFound) {
@@ -273,6 +322,7 @@ module.exports = {
         },
 
         function (userFound, done) {
+          console.log("debut");
           // Verifier si l'utilisateur dispose des droits admin
           models.User.findOne({
             attributes: ["isAdmin"],
@@ -293,12 +343,13 @@ module.exports = {
         },
 
         function (commentFound, done) {
+          console.log("la");
           // Récupérer l'id du commentaire concerné
           if (commentFound) {
-            models.Comment.destroy({
+            Comment.destroy({
               where: {
                 id: commentId,
-                messageId,
+                message_id,
               },
             })
               .then(function (deleteComment) {
@@ -318,6 +369,7 @@ module.exports = {
         },
       ],
       function (deleteComment) {
+        console.log("ici");
         if (deleteComment) {
           // delete du message OK
           return res

@@ -47,6 +47,7 @@ db.Sequelize = Sequelize;
 db.user = require("./user")(sequelize, Sequelize);
 db.post = require("./message")(sequelize, Sequelize);
 db.comments = require("./comments")(sequelize, Sequelize);
+//db.like = require("./like")(sequelize, Sequelize);
 
 db.user.hasMany(db.post, {
   foreignKey: "userId",
@@ -76,6 +77,12 @@ db.comments.belongsTo(db.post, {
   foreignKey: "userId",
 
 });
+
+//db.like.belongsTo(db.user, {
+ // foreignKey: "userId",
+ // defaultValue: "gren",
+ // as: "user",
+//});
 
 
 

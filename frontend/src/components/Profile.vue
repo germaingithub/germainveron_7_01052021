@@ -72,7 +72,7 @@ infoUser() {
 deleteUser() {
     const id = this.userId;
     const isAdmin = 1 ;
-    if(id == id || isAdmin == 0) {
+    if(id == id || isAdmin == 1) {
     axios.delete('http://localhost:8081/api/users/me/' + id, {
         headers: {
             'authorization': 'Bearer ' + localStorage.getItem('token')
@@ -87,6 +87,7 @@ deleteUser() {
     })
     .catch ((error) => {
         console.log(error);
+        alert("Veuillez controler et supprimer vos posts avant de pouvoir supprimer votre compte");
     })
     }
 }
