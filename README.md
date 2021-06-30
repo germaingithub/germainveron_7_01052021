@@ -29,4 +29,4 @@ et lancer:
 npx sequelize-cli db:create
 npx sequelize-cli db:migrate
 
-Vous pouvez ensuite l'application via ce lien http://localhost:8080/ (ou autre numéro défini par Vue.js)
+Vous pouvez ensuite l'application via ce lien http://localhost:8088/ (ou autre numéro défini par Vue.js)
