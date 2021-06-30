@@ -3,7 +3,9 @@
 <NavbarPost />
 
 <Post
+
     v-for="post in posts" 
+    
     :username ="post.username"
     :title="post.title"
     :content ="post.content"
@@ -12,9 +14,11 @@
     :key="post.id" 
     :getAllComments="post.id"
     :userId="post.userId"
+    :createdAt="post.createdAt"
     > 
     
   <template getAllComments(post.id) v-slot:Comments v-if="post.comments !== null">
+   
     <div class=" last-comments bg-dark " role="alert" aria-live="assertive" aria-atomic="true">
      
                 <div class="toast-header comment-bloc"

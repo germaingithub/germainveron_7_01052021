@@ -9,9 +9,11 @@
             <div class="card-text">
                 <h2 class="ml-3 text-light text-uppercase"> {{ title }} </h2>
                 <h4 class="ml-3 text-light"> {{ content }} </h4>
+                
             </div>
             <div>
                 <img id="imgpost" class="mb-3" :src="attachment">
+                <h5 class="ml-3 text-light">Ecrit le {{ createdAt }} </h5>
             </div>
             <slot name="Comments"></slot>
             <slot name="EditCom"></slot>
@@ -64,7 +66,11 @@
             },
              userId: {
                 type: Number
+            },
+            createdAt: {
+                type: Date
             }
+
         },
 
     }
